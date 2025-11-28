@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>結婚ファンタジー診断 | 運命の職業とパートナーがわかる</title>
+    <meta name="description" content="16のファンタジー職業で占う、あなたの恋愛スタイルと相性診断。">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;500&family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <button id="menu-btn" class="menu-btn" aria-label="メニューを開く">≡</button>
+
+    <nav id="nav-overlay" class="nav-overlay hidden">
+        <button id="close-btn" class="close-btn">×</button>
+        <ul class="nav-list">
+            <li><a href="#" onclick="backToTop()">🏠 トップに戻る</a></li>
+            <li><a href="javascript:void(0)" id="menu-catalog-btn">📖 職業図鑑を見る</a></li>
+            <li><a href="#" onclick="alert('リンクをコピーしました！')">🔗 シェアする</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        
+        <section id="screen-top" class="screen active">
+            
+            <div class="hero bg-section hero-bg text-white">
+                <div class="overlay"></div>
+                <div class="content-front">
+                    
+                    <div class="logo-wrapper">
+                        <h1 class="logo-text">パートナー診断</h1>
+                        <span class="badge-rpg">RPG風</span>
+                    </div>
+                    
+                    <p class="hero-catch">
+                        5分で判明。あなたの「愛の適職」と<br>
+                        「運命の相手」は誰？
+                    </p>
+                    
+                    <p class="credibility-badge">
+                        ✨ 心理学 × 統計データに基づく本格分析 ✨
+                    </p>
+
+                    <p class="hero-desc">
+                        行動心理学に基づき、あなたの恋愛スタイルを<br>
+                        16のファンタジー職業で分析します。
+                    </p>
+    
+                    <button class="btn-primary pulse-anim start-trigger glow-btn">診断を始める 🔮</button>
+                    
+                    <div class="sub-links">
+                        <a href="#" onclick="alert('準備中')" class="text-white">▷ 診断済みの方はこちら</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lp-section bg-section intro-bg text-white">
+                <div class="overlay"></div>
+                <div class="content-front">
+                    <h2 class="section-title text-white">恋がうまくいかないのは、<br>パーティ編成のせいかも？</h2>
+                    <p class="section-text text-white">
+                        冒険に「戦士」と「僧侶」が必要なように、<br>
+                        恋にも相性の良い組み合わせがあります。<br>
+                        <br>
+                        無理して相手に合わせるのではなく、<br>
+                        <strong>「あなたのパートナータイプ」</strong>を知れば、<br>
+                        関係はもっと自然で、愛しいものに変わります。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="lp-section bg-section axes-bg text-white">
+                <div class="overlay"></div>
+                <div class="content-front">
+                    <h2 class="section-title text-white">的中率のヒミツ：<br>あなたを作る4つの因子</h2>
+                    <p class="section-desc text-white">
+                        行動心理学に基づく4つの対立軸から、<br>
+                        あなたの本質を精密に数値化します。
+                    </p>
+                    
+                    <div class="axes-grid">
+                        <div class="axis-item card-style">
+                            <span class="axis-icon">🎨</span>
+                            <h3>こだわり vs 協調</h3>
+                            <p class="axis-sub">自分を貫く？ 合わせる？</p>
+                        </div>
+                        <div class="axis-item card-style">
+                            <span class="axis-icon">⚖️</span>
+                            <h3>ルール vs 自由</h3>
+                            <p class="axis-sub">キチンと？ ノリで？</p>
+                        </div>
+                        <div class="axis-item card-style">
+                            <span class="axis-icon">🤝</span>
+                            <h3>リード vs サポート</h3>
+                            <p class="axis-sub">引っ張る？ 支える？</p>
+                        </div>
+                        <div class="axis-item card-style">
+                            <span class="axis-icon">🌱</span>
+                            <h3>野心 vs 安定</h3>
+                            <p class="axis-sub">上を目指す？ 今を楽しむ？</p>
+                        </div>
+                    </div>
+                    <p class="highlight-text text-white" style="color: #ffcece;">だから、あなたにぴったりの相手がわかる。</p>
+                </div>
+            </div>
+
+            <div class="lp-section benefit-section">
+                <h2 class="section-title">この診断でわかること</h2>
+                
+                <div class="benefit-card-container">
+                    <div class="benefit-card">
+                        <img src="assets/images/benefit-manual.jpg" alt="取扱説明書" class="card-img">
+                        <div class="card-text">
+                            <h3>📜 あなたの「恋愛トリセツ」</h3>
+                            <p>「私ってこういうとこある！」<br>無意識のクセや、いつも陥りがちな恋のパターンが丸わかり。</p>
+                        </div>
+                    </div>
+    
+                    <div class="benefit-card">
+                        <img src="assets/images/benefit-partner.jpg" alt="運命の相手" class="card-img">
+                        <div class="card-text">
+                            <h3>💘 本当に合うパートナー</h3>
+                            <p>「勇者」タイプのあなたと相性最高なのは誰？<br>未来のパートナー候補が見つかるかも。</p>
+                        </div>
+                    </div>
+    
+                    <div class="benefit-card">
+                        <img src="assets/images/benefit-guide.jpg" alt="攻略法" class="card-img">
+                        <div class="card-text">
+                            <h3>🗝 あの人の攻略本</h3>
+                            <p>気になる彼へのLINEやデートの誘い方は？<br>タイプ別の「刺さる」アプローチを伝授。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lp-section bg-section closing-bg text-white closing-section-fix">
+                <div class="overlay"></div>
+                <div class="content-front">
+                    <h2 class="section-title text-white">新しい自分に出会う<br>冒険へ出かけよう。</h2>
+                    <p class="section-text text-white">
+                        あなたの物語が、ここから始まります。<br>
+                        準備はいいですか？
+                    </p>
+                    <button class="btn-primary pulse-anim start-trigger glow-btn">診断を始める 🔮</button>
+                    <p class="sub-note text-white">※完全無料・匿名で診断できます</p>
+                </div>
+            </div>
+            
+            <div class="fixed-cta">
+                <button class="btn-fixed start-trigger">今すぐ診断する（無料） ▶︎</button>
+            </div>
+
+        </section>
+
+        <section id="screen-question" class="screen hidden">
+            <div class="progress-area">
+                <div class="progress-header">
+                    <span class="progress-label">冒険の記録</span>
+                    <span class="progress-count"><span id="current-num">1</span> / <span id="total-num">56</span></span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="question-card" class="question-card">
+                <h3 id="question-text" class="question-text">ここに質問が表示されます</h3>
+                
+                <div class="answer-options">
+                    <button class="option-btn btn-yes-big" data-value="5">
+                        <span class="icon">💖</span>
+                        <span class="label">すごく<br>そう</span>
+                    </button>
+                    <button class="option-btn btn-yes-small" data-value="4">
+                        <span class="icon">🩷</span>
+                        <span class="label">やや<br>そう</span>
+                    </button>
+                    <button class="option-btn btn-neutral" data-value="3">
+                        <span class="icon">⚪️</span>
+                        <span class="label">どちらとも<br>いえない</span>
+                    </button>
+                    <button class="option-btn btn-no-small" data-value="2">
+                        <span class="icon">💧</span>
+                        <span class="label">あまり<br>違う</span>
+                    </button>
+                    <button class="option-btn btn-no-big" data-value="1">
+                        <span class="icon">💎</span>
+                        <span class="label">全然<br>違う</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="nav-back">
+                <button id="back-btn" class="btn-text">↩︎ 前の質問に戻る</button>
+            </div>
+        </section>
+
+
+        <section id="screen-loading" class="screen hidden">
+            <div class="loading-content">
+                <div class="spinner">🪄</div>
+                <p id="loading-text">あなたの職業を分析中...</p>
+            </div>
+        </section>
+
+
+        <section id="screen-result" class="screen hidden">
+            
+            <div class="rpg-header-card" id="rpg-header-bg">
+                <div class="rpg-header-content">
+                    <div class="rpg-job-info">
+                        <div class="job-badges">
+                            <span class="rpg-badge" id="res-grand-class">BRAVE</span>
+                            <span class="rpg-badge rarity" id="res-rarity">SSR</span>
+                        </div>
+                        <h2 class="rpg-job-title" id="res-name">光の聖騎士</h2>
+                        <p class="rpg-job-catch" id="res-catch">鉄壁の守護とガラスのハート</p>
+                    </div>
+                    <div class="rpg-char-img-area">
+                        <div class="rpg-char-img" id="res-img">🛡️</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rpg-paper-container">
+                
+                <div class="rpg-intro-box">
+                    <span class="intro-icon">📖</span>
+                    <h3 class="intro-title">THE STORY</h3>
+                    <div class="intro-text-wrapper">
+                        <p id="res-intro">ここに説明文が入ります。</p>
+                    </div>
+                </div>
+
+                <div class="rpg-section-box">
+                    <h3 class="rpg-sec-title">📊 能力パラメータ</h3>
+                    <div class="status-grid" id="res-status-list"></div>
+                </div>
+
+                <div id="chart-section" class="rpg-section-box">
+                    <h3 class="rpg-sec-title">⚖️ あなたの心理傾向分析</h3>
+                    <div id="chart-container" class="chart-container"></div>
+                </div>
+
+                <div class="rpg-section-box">
+                    <h3 class="rpg-sec-title">⚔️ バトルスキル & 報酬</h3>
+                    
+                    <div class="skill-list">
+                        <div class="skill-item ultimate">
+                            <div class="skill-icon">⚡️</div>
+                            <div class="skill-text">
+                                <span class="skill-label">必殺技 (Ultimate)</span>
+                                <h4 id="res-skill-ult-name">---</h4>
+                                <p id="res-skill-ult-desc">---</p>
+                            </div>
+                        </div>
+                        <div class="skill-item passive">
+                            <div class="skill-icon">📜</div>
+                            <div class="skill-text">
+                                <span class="skill-label">パッシブ (Passive)</span>
+                                <h4 id="res-skill-pas-name">---</h4>
+                                <p id="res-skill-pas-desc">---</p>
+                            </div>
+                        </div>
+                        <div class="skill-item weakness">
+                            <div class="skill-icon">💀</div>
+                            <div class="skill-text">
+                                <span class="skill-label">弱点 (Weakness)</span>
+                                <h4 id="res-skill-weak-name">---</h4>
+                                <p id="res-skill-weak-desc">---</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="loot-box">
+                        <div class="loot-icon">💎</div>
+                        <div class="loot-text">
+                            <span class="loot-label">ドロップアイテム (結婚のメリット)</span>
+                            <p id="res-loot-text">---</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rpg-section-box">
+                    <h3 class="rpg-sec-title">📜 冒険の攻略ガイド</h3>
+                    <div class="quest-slider-container">
+                        <div class="rpg-card card-blue quest-slide">
+                            <div class="card-img-area">
+                                <span class="placeholder-icon">🆙</span>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge">LEVEL UP</span>
+                                <div id="res-guide-levelup" class="card-text">---</div>
+                            </div>
+                        </div>
+                        <div class="rpg-card card-green quest-slide">
+                            <div class="card-img-area">
+                                <span class="placeholder-icon">🕊️</span>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge">COMMUNICATION</span>
+                                <div id="res-guide-line" class="card-text">---</div>
+                            </div>
+                        </div>
+                        <div class="rpg-card card-pink quest-slide">
+                            <div class="card-img-area">
+                                <span class="placeholder-icon">🏰</span>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge">DATE PLAN</span>
+                                <div id="res-guide-date" class="card-text">---</div>
+                            </div>
+                        </div>
+                        <div class="rpg-card card-secret quest-slide">
+                            <div class="card-img-area">
+                                <span class="placeholder-icon">🔒</span>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge">SECRET KEY</span>
+                                <div id="res-guide-woo" class="card-text">---</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align:center; font-size:0.8rem; color:#999; margin-top:10px;">← 左右にスワイプして確認 →</p>
+                </div>
+
+                <div class="rpg-section-box">
+                    <h3 class="rpg-sec-title">🔮 異界の英雄たち (同じ魂を持つ者)</h3>
+                    
+                    <div id="res-soul-tags" class="soul-slider-container">
+                        </div>
+                    
+                    <p style="text-align:center; font-size:0.8rem; color:#999; margin-top:10px;">← 左右にスワイプして確認 →</p>
+                </div>
+
+                <div class="rpg-section-box">
+                    <h3 class="rpg-sec-title">🤝 パーティ編成シミュレーター</h3>
+                    
+                    <div id="sim-default-view">
+                        <h4 class="sim-sub-title">👑 おすすめパーティ構成 (BEST 3)</h4>
+                        <div id="sim-best-list" class="sim-best-list"></div>
+                        
+                        <h4 class="sim-sub-title danger">☠️ 混ぜるな危険 (WORST 1)</h4>
+                        <div id="sim-worst-list" class="sim-best-list"></div>
+                    </div>
+
+                    <div class="sim-control-area">
+                        <label for="sim-selector" class="sim-label">👇 気になる相手との相性を調べる</label>
+                        <div class="select-wrapper">
+                            <select id="sim-selector" class="rpg-select">
+                                <option value="">相手のジョブを選択してください ▼</option>
+                                </select>
+                        </div>
+                    </div>
+
+                    <div id="sim-result-card" class="sim-result-card hidden">
+                        <div class="sim-header">
+                            <div class="sim-vs-display">
+                                <span id="sim-my-name">あなた</span>
+                                <span class="sim-vs-icon">⚔️</span>
+                                <span id="sim-target-name">相手</span>
+                            </div>
+                            <div class="sim-rank-badge" id="sim-rank-badge">
+                                <span class="rank-label">判定</span>
+                                <span class="rank-value-group">
+                                    <span id="sim-rank-value" class="rank-main">SS</span>
+                                    <span id="sim-rank-desc" class="rank-sub">運命的</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="sim-body">
+                            <h4 id="sim-effect-title" class="sim-effect-title">---</h4>
+                            
+                            <p id="sim-desc-text" class="sim-desc-text">---</p>
+
+                            <div id="sim-buffs-list" class="sim-buffs-list">
+                                </div>
+                        </div>
+                        
+                        <button id="sim-reset-btn" class="btn-secondary full-width" style="margin-top:15px;">
+                            🔄 閉じる
+                        </button>
+                    </div>
+                </div>
+
+                <div class="action-area">
+                    <p class="share-title">この結果をシェアする</p>
+                    <div class="share-btns">
+                        <button class="share-btn twitter" onclick="shareTwitter()">
+                            <span class="icon">𝕏</span>
+                        </button>
+                        
+                        <button class="share-btn line" onclick="shareLine()">
+                            <span class="icon">LINE</span>
+                        </button>
+                        
+                        <button class="share-btn copy" onclick="copyToClipboard()">
+                            <span class="icon">🔗</span>
+                        </button>
+                    </div>
+                    
+                    <div id="toast" class="toast hidden">リンクをコピーしました！</div>
+
+                    <br>
+                    <button class="btn-primary" onclick="backToTop()">酒場に戻る (TOP)</button>
+                </div>
+
+                <div class="catalog-footer">
+                    <p style="text-align:center; font-size:0.9rem; color:#888;">他のジョブも見てみる？</p>
+                    <div id="type-list-container" class="type-grid"></div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
