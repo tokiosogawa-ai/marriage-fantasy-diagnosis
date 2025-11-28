@@ -2377,3 +2377,94 @@ button { font-family: inherit; }
 .toast.show {
     opacity: 1;
 }
+/* =========================================
+   Fix: Footer Catalog (Mobile Responsiveness)
+========================================= */
+
+/* フッターエリア全体 */
+.catalog-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px dashed #e0e0e0;
+}
+
+/* コンテナ（グループを縦に並べる） */
+#type-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* 各グループ（Brave, Ruler...）の箱 */
+.catalog-group {
+    background: rgba(255,255,255,0.7);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #eee;
+}
+
+.group-header {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.group-desc {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0 0 15px 0;
+    line-height: 1.4;
+}
+
+/* --- ここが重要！ボタンの並び方 --- */
+
+.group-grid {
+    display: grid;
+    /* ★スマホ：2列にする（これではみ出し防止） */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+/* ボタンのデザイン */
+.type-icon-btn {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.type-icon-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--rpg-gold);
+    background: #fffbe6;
+}
+
+.type-icon-btn .icon {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.type-icon-btn .label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #444;
+    display: block;
+}
+
+/* --- PC画面（768px以上）の時の調整 --- */
+@media (min-width: 768px) {
+    .group-grid {
+        /* ★PC：4列にする */
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

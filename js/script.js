@@ -1,4 +1,51 @@
 // =========================================
+// 0. ユーザー識別機能 (iOS対応・安全版)
+// =========================================
+
+// ★修正：エラーが出ても止まらないように try-catch で囲む
+function getUserId() {
+    try {
+        let userId = localStorage.getItem('fantasy_user_id');
+        if (!userId) {
+            userId = 'user_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('fantasy_user_id', userId);
+        }
+        return userId;
+    } catch (e) {
+        console.warn("LocalStorage is not available (Private Mode?):", e);
+        return "guest_user"; // エラー時はゲストとして扱う
+    }
+}
+
+function saveHistoryLocal(typeKey) {
+    try {
+        const userId = getUserId();
+        const historyData = {
+            userId: userId,
+            type: typeKey,
+            timestamp: new Date().toISOString()
+        };
+        localStorage.setItem('fantasy_last_result', JSON.stringify(historyData));
+    } catch (e) {
+        console.warn("Failed to save history locally:", e);
+        // エラーを握りつぶして、処理を止めない
+    }
+}
+
+function checkHistory() {
+    try {
+        const lastResult = localStorage.getItem('fantasy_last_result');
+        if (lastResult) {
+            const data = JSON.parse(lastResult);
+            return data.type;
+        }
+    } catch (e) {
+        console.warn("Failed to load history:", e);
+    }
+    return null;
+}
+
+// =========================================
 // 1. グローバル設定・変数
 // =========================================
 const ANIMATION_DURATION = 300; 
@@ -146,27 +193,46 @@ function prevQuestion() {
     updateQuestionView();
 }
 
+// =========================================
+// 5. 結果計算・表示ロジック (安全版)
+// =========================================
+
+/**
+ * 診断終了処理
+ */
 function finishDiagnosis() {
     switchScreen("loading");
-    const type = calculateType();
     
-    // ローカル保存（履歴用）
-    saveHistoryLocal(type);
+    // エラーが起きても止まらないように包む
+    try {
+        const type = calculateType();
+        
+        // バックグラウンド処理（失敗しても無視）
+        setTimeout(() => {
+            saveHistoryLocal(type);     // ローカル保存
+            sendToGoogleSheets(type);   // GAS送信
+        }, 0);
 
-    // ★追加：Googleスプレッドシートへ送信（バックグラウンドで実行）
-    sendToGoogleSheets(type);
-    
-    // 演出：少し待たせる
-    let step = 0;
-    const loadingText = document.getElementById("loading-text");
-    const interval = setInterval(() => {
-        step++;
-        if(step === 1) loadingText.innerText = "魂の形を分析中...";
-        if(step === 2) {
-            clearInterval(interval);
-            showResult(type); 
-        }
-    }, 1500);
+        // 演出：少し待たせる（ここは絶対に実行させる）
+        let step = 0;
+        const loadingText = document.getElementById("loading-text");
+        const interval = setInterval(() => {
+            step++;
+            if(step === 1) {
+                if(loadingText) loadingText.innerText = "運命の相手を探しています...";
+            }
+            if(step === 2) {
+                clearInterval(interval);
+                showResult(type); // 結果表示へ
+            }
+        }, 1500);
+
+    } catch (e) {
+        console.error("Diagnosis Error:", e);
+        // 万が一エラーが出ても、強制的にデフォルト結果（勇者）を表示して救済する
+        alert("エラーが発生しましたが、結果を表示します。");
+        showResult("OPDA"); 
+    }
 }
 
 function calculateType() {
