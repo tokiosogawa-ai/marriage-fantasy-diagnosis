@@ -726,87 +726,41 @@ button { font-family: inherit; }
 /* =========================================
    5. PC画面調整 (768px以上)
 ========================================= */
+/* =========================================
+   Fix: Status Layout (PC表示の最適化)
+========================================= */
+
+/* PC画面（768px以上）の時の調整 */
 @media (min-width: 768px) {
-    /* 背景画像の固定 */
-    .bg-section { background-attachment: fixed; padding: 150px 20px !important; }
-    
-    /* メリットセクション */
-    .benefit-section.lp-section {
-        display: block !important; width: 100%; max-width: 1000px; margin: 0 auto;
-    }
-    .benefit-card-container {
-        display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; justify-content: center;
-        align-items: start;
-    }
-    .benefit-card { max-width: 400px; margin: 0 auto; }
-    .benefit-card .card-img { height: 200px; }
-    
-    /* スマホ用CTA非表示 */
-    .fixed-cta { display: none; }
-
-    /* -------------------------------------------
-       ★フッター（図鑑）のレイアウト変更
-    ------------------------------------------- */
-    
-    /* グループ全体を包むコンテナ */
-    #type-list-container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr); 
-        gap: 20px;
-        /* align-items: start; を削除し、デフォルトの stretch (高さ揃え) にする */
-    }
-
-    /* グループごとの箱 */
-    .catalog-group {
-        margin-bottom: 0;
-        height: 100%; /* 箱の高さを揃える */
-        display: flex;
-        flex-direction: column; /* 中身を縦並びに */
-    }
-
-    /* グループヘッダー（タイトル） */
-    .group-header {
-        justify-content: center; /* 中央揃え */
-        min-height: 3.5em; /* タイトルが改行しても高さを揃える */
-        align-items: flex-start; /* 上寄せ */
-        text-align: center;
-    }
-
-    /* 説明文エリア */
-    .group-desc {
-        /* ★ここが重要：高さを確保してボタン位置を揃える */
-        min-height: 160px; 
-        margin-bottom: 20px;
-    }
-
-    /* グループ内のグリッド */
-    .group-grid {
-        grid-template-columns: 1fr; /* 縦1列 */
-        gap: 10px;
-        margin-top: auto; /* 下に寄せる（念のため） */
-    }
-
-    /* ボタンを「横長カード」にする */
-    .type-icon-btn {
+    .status-row {
         flex-direction: row;
-        justify-content: flex-start;
         align-items: center;
-        padding: 12px 15px;
-        text-align: left;
+        justify-content: flex-start;
+        gap: 20px;          /* 間隔を少し詰める */
+        padding: 15px 20px;
     }
 
-    .type-icon-btn .icon {
-        font-size: 1.8rem;
+    /* 左側：ラベルと星のエリア */
+    .stat-main {
+        flex: 0 0 230px;    /* ★幅を260px → 230px に縮小 */
         margin-bottom: 0;
-        margin-right: 10px;
-        min-width: 35px;
-        text-align: center;
+        border-right: 2px dotted #ddd;
+        padding-right: 20px; /* 余白も少し減らす */
     }
 
-    .type-icon-btn .label {
-        font-size: 0.95rem;
-        font-weight: bold;
-        line-height: 1.3;
+    /* 右側：説明文エリア */
+    .stat-desc-text {
+        flex: 1;
+        max-width: none;    /* ★幅制限（500px）を解除して画面いっぱい使う */
+        border-left: none;
+        padding-left: 0;
+        padding-top: 0;
+        text-align: left;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+        white-space: normal;
+        padding-right: 10px; /* 右端の余白を減らす */
     }
 }
 /* フッターの説明文スタイル */
@@ -1032,36 +986,43 @@ button { font-family: inherit; }
     --rpg-red: #e15f41;
 }
 
-/* ヘッダーカード */
+/* ヘッダーカード：背景画像を表示するためにoverflow制御を調整 */
 .rpg-header-card {
     background: linear-gradient(135deg, #2c3e50, #000000);
     color: white;
     padding: 25px 20px;
     border-radius: 12px;
-    margin-bottom: 20px;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* キャラを枠からはみ出させるためvisibleにする */
+    margin-bottom: 60px; /* キャラが下にはみ出る分の余白を確保 */
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     border: 2px solid var(--rpg-gold);
 }
+
+/* テキストコンテンツ（キャラの後ろに行かないように調整） */
 .rpg-header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
-    z-index: 2;
+    z-index: 5; /* 背景より前、キャラより後ろ（または被らないように調整） */
 }
 .rpg-job-title {
     font-family: 'Zen Maru Gothic', sans-serif;
     font-size: 2.2rem;
     margin: 5px 0;
-    text-shadow: 2px 2px 0 #000;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8); /* ★文字の影を濃くして、背景画像の上でも読めるようにする */
     line-height: 1.2;
+    position: relative; /* 背景より手前に表示 */
+    z-index: 2;
 }
 .rpg-job-catch {
     font-size: 0.9rem;
     opacity: 0.9;
     margin: 0;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8); /* ★文字の影を濃くして、背景画像の上でも読めるようにする */
+    position: relative; /* 背景より手前に表示 */
+    z-index: 2;
 }
 .job-badges {
     display: flex; gap: 5px; margin-bottom: 5px;
@@ -1524,6 +1485,7 @@ button { font-family: inherit; }
     width: 100%;
     height: 100%;
     object-fit: cover; /* 枠に合わせてトリミング */
+    display: block;
 }
 
 /* コンテンツエリア */
@@ -2467,4 +2429,376 @@ button { font-family: inherit; }
         /* ★PC：4列にする */
         grid-template-columns: repeat(4, 1fr);
     }
+}
+
+/* =========================================
+   余白引き締め（PC画面での最適化）
+========================================= */
+
+/* PC画面でのカード内余白を引き締める */
+@media (min-width: 768px) {
+    .card-content {
+        padding: 16px 20px; /* 上下を20px→16pxに縮小、左右は維持 */
+    }
+    
+    /* カード全体の最大幅を制限して無駄な広がりを抑える */
+    .card {
+        max-width: 100%;
+    }
+    
+    /* 結果画面のコンテナも最大幅を制限 */
+    #screen-result .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* パーティシミュレーターのカードも余白調整 */
+    .sim-best-item,
+    .sim-worst-item {
+        padding: 12px 16px; /* 余白を少し減らす */
+    }
+}
+
+/* =========================================
+   Fix: Card Subtitle (説明文の追加)
+========================================= */
+
+.card-desc {
+    font-size: 0.8rem;      /* 少し小さめに */
+    color: #888;            /* グレーにして控えめに */
+    font-weight: bold;
+    margin-bottom: 15px;    /* 本文との間隔 */
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee; /* 下線で区切る */
+    width: 100%;
+    line-height: 1.4;
+}
+
+/* =========================================
+   Fix: Card Image Overlay (画像上の日本語ラベル)
+========================================= */
+
+/* 画像エリアを基準にする */
+.card-img-area {
+    position: relative; /* すでにあるはずですが念のため */
+}
+
+/* 画像の上に乗る帯 */
+.card-img-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7); /* 半透明の黒 */
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 5px 15px;
+    border-radius: 10px 0 0 0; /* 左上だけ丸くする */
+    border-top: 1px solid rgba(255,255,255,0.3);
+    border-left: 1px solid rgba(255,255,255,0.3);
+    box-shadow: -2px -2px 5px rgba(0,0,0,0.2);
+    letter-spacing: 1px;
+}
+
+/* Secretだけ特別色にする */
+.card-secret .card-img-overlay {
+    background: rgba(192, 57, 43, 0.85); /* 赤っぽい色 */
+    color: #fff;
+}
+
+/* 説明文（card-desc）のデザイン微調整 */
+.card-desc {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed #eee; /* 点線にして区切りを強調 */
+    width: 100%;
+    line-height: 1.5;
+}
+
+/* =========================================
+   Fix: Skill Labels (わかりやすい説明追加)
+========================================= */
+
+/* ラベルと説明文を横並びにする行 */
+.skill-header-row {
+    display: flex;
+    align-items: baseline; /* 文字のベースラインを揃える */
+    flex-wrap: wrap;       /* スマホで長くなったら折り返す */
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+/* 既存のラベルの微調整（マージンを消す） */
+.skill-label, .loot-label {
+    margin-bottom: 0; /* 下の余白は親の skill-header-row で管理 */
+}
+
+/* 新しい説明文のデザイン */
+.skill-desc-label {
+    font-size: 0.75rem; /* 小さめに */
+    color: #888;        /* グレーで控えめに */
+    font-weight: bold;
+}
+
+/* ドロップアイテム内の調整 */
+.loot-text .skill-header-row {
+    margin-bottom: 4px;
+}
+
+/* =========================================
+   Fix: Top Page Benefit Section (3列表示の復活)
+========================================= */
+
+.benefit-section {
+    padding: 60px 20px;
+    background: #fcfaff;
+    text-align: center;
+}
+
+.benefit-card-container {
+    display: grid;
+    grid-template-columns: 1fr; /* スマホは縦1列 */
+    gap: 25px;
+    max-width: 1000px; /* 横に広がりすぎないように制限 */
+    margin: 0 auto;    /* 中央寄せ */
+}
+
+/* 画面幅が768px以上（PC・タブレット）の時 */
+@media (min-width: 768px) {
+    .benefit-card-container {
+        grid-template-columns: repeat(3, 1fr); /* ★横3列にする */
+        align-items: start; /* 高さを揃えつつ上揃え */
+    }
+}
+
+/* カード自体のデザイン調整 */
+.benefit-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    text-align: left;
+    transition: transform 0.3s;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px); /* ホバーで少し浮く演出 */
+}
+
+.benefit-card .card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.benefit-card .card-text {
+    padding: 20px;
+}
+
+.benefit-card h3 {
+    font-size: 1.2rem;
+    color: var(--primary, #8d6df9);
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+
+.benefit-card p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* =========================================
+   Fix: Quest Card Layout (余白調整版)
+========================================= */
+
+/* 1. カードの中身（余白を少し詰める） */
+.card-content {
+    padding: 24px 20px;  /* 左右の余白を28px→20pxに減らす */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-height: auto;    /* 高さは親のflexで自動調整されるのでauto */
+}
+
+/* 2. テキストエリア（右余白を最小限にする） */
+.card-text, .quest-body {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    letter-spacing: 0.02em; /* 少し詰める */
+    color: #444;
+    text-align: left;
+    width: 100%;         /* 幅いっぱい使う */
+    padding-right: 5px;  /* 右余白を減らす（15px→5px） */
+    box-sizing: border-box;
+}
+
+/* PC画面（768px以上）の時の調整 */
+@media (min-width: 768px) {
+    .card-text {
+        padding-right: 10px; /* PCでも少しだけ余白を入れる程度に */
+        max-width: 100%;     /* 幅制限を解除して広く使う */
+    }
+}
+
+/* =========================================
+   Fix: Loot Item Styling (ドロップアイテム装飾)
+========================================= */
+
+/* アイテム名（【〇〇】の部分） */
+.loot-item-name {
+    display: block;       /* 改行させる */
+    font-size: 1.1rem;    /* 少し大きく */
+    font-weight: 900;     /* 極太字で強調 */
+    color: #d35400;       /* 濃いオレンジ/茶色系でリッチに */
+    margin-top: 5px;
+    margin-bottom: 8px;   /* 本文との間隔 */
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+}
+
+/* アイテム説明文 */
+.loot-item-desc {
+    display: block;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #5d4037;       /* 読みやすいこげ茶 */
+}
+
+/* =========================================
+   Fix: Quest Card Height Alignment (高さ揃え)
+========================================= */
+
+/* 1. スライダーのコンテナ */
+/* 中にあるカードの高さを、一番高いものに合わせて強制的に引き伸ばす */
+.quest-slider-container {
+    align-items: stretch !important; 
+}
+
+/* 2. カード自体 */
+/* 高さが引き伸ばされた分、中身も縦いっぱいに広げる */
+.rpg-card.quest-slide {
+    height: auto !important; /* 固定値をやめて親に合わせる */
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   Fix: Character Image in Header
+========================================= */
+
+/* キャラクター画像エリア（位置微調整） */
+.rpg-char-img-area {
+    position: absolute;
+    
+    /* ★変更：-30px → -50px に変更（より下げる） */
+    bottom: -50px;       
+    
+    left: 0;
+    width: 100%;
+    height: 200%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 画像本体（変更なし） */
+.rpg-char-img-file {
+    width: auto;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 20px rgba(0,0,0,0.6));
+}
+
+/* =========================================
+   Fix: Status Background Character (透かし演出)
+========================================= */
+
+/* ステータスエリアの親箱を基準にする */
+#res-status-list {
+    position: relative;
+    overflow: hidden; /* はみ出し防止 */
+    z-index: 1;
+}
+
+/* 透かしキャラクター画像 */
+.status-bg-chara {
+    position: absolute;
+    bottom: -20px;   /* 下の方に配置 */
+    right: -20px;    /* 右の方に配置 */
+    width: 180px;    /* サイズはお好みで */
+    height: auto;
+    opacity: 0.15;   /* ★透明度を下げる（ここがポイント！） */
+    pointer-events: none; /* クリックの邪魔をしない */
+    z-index: -1;     /* 文字より後ろに */
+    filter: grayscale(20%); /* 少し色味を落として馴染ませる */
+    transform: rotate(-5deg); /* 少し傾けてオシャレに */
+}
+
+/* PC画面では少し大きく表示 */
+@media (min-width: 768px) {
+    .status-bg-chara {
+        width: 250px;
+        right: 10px;
+        bottom: -30px;
+        opacity: 0.12; /* PCは画面が広いので少し薄めに */
+    }
+}
+
+/* =========================================
+   Floating Character (Navigation)
+========================================= */
+
+#floating-char-layer {
+    position: fixed;        /* 画面に固定 */
+    bottom: -20px;          /* 足元を少し隠して自然に */
+    right: -10px;           /* 右端に配置 */
+    width: 160px;           /* スマホでの基本サイズ */
+    z-index: 900;           /* コンテンツより上、メニューより下 */
+    
+    /* ★重要：画像の下にあるボタンを押せるようにする */
+    pointer-events: none;   
+    
+    /* フェードイン・アウト用 */
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+#floating-char-img {
+    width: 100%;
+    height: auto;
+    /* 輪郭を光らせて視認性を上げる */
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.8)) drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+    
+    /* ふわふわさせる */
+    animation: float-idle 4s ease-in-out infinite;
+}
+
+/* ふわふわアニメーション */
+@keyframes float-idle {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+/* PC画面（768px以上）では大きくする */
+@media (min-width: 768px) {
+    #floating-char-layer {
+        width: 280px; /* PCサイズ */
+        right: 20px;
+        bottom: -30px;
+    }
+}
+
+/* 非表示用クラス */
+#floating-char-layer.hidden {
+    opacity: 0;
+    transform: translateY(50px); /* 下に隠れる動き */
+    pointer-events: none;
 }

@@ -172,23 +172,23 @@
                 <h3 id="question-text" class="question-text">ここに質問が表示されます</h3>
                 
                 <div class="answer-options">
-                    <button class="option-btn btn-yes-big" data-value="5">
+                    <button class="option-btn btn-yes-big" data-value="4">
                         <span class="icon">💖</span>
                         <span class="label">すごく<br>そう</span>
                     </button>
-                    <button class="option-btn btn-yes-small" data-value="4">
+                    <button class="option-btn btn-yes-small" data-value="3">
                         <span class="icon">🩷</span>
                         <span class="label">やや<br>そう</span>
                     </button>
-                    <button class="option-btn btn-neutral" data-value="3">
+                    <button class="option-btn btn-neutral" data-value="2">
                         <span class="icon">⚪️</span>
                         <span class="label">どちらとも<br>いえない</span>
                     </button>
-                    <button class="option-btn btn-no-small" data-value="2">
+                    <button class="option-btn btn-no-small" data-value="1">
                         <span class="icon">💧</span>
                         <span class="label">あまり<br>違う</span>
                     </button>
-                    <button class="option-btn btn-no-big" data-value="1">
+                    <button class="option-btn btn-no-big" data-value="0">
                         <span class="icon">💎</span>
                         <span class="label">全然<br>違う</span>
                     </button>
@@ -216,13 +216,13 @@
                     <div class="rpg-job-info">
                         <div class="job-badges">
                             <span class="rpg-badge" id="res-grand-class">BRAVE</span>
-                            <span class="rpg-badge rarity" id="res-rarity">SSR</span>
                         </div>
-                        <h2 class="rpg-job-title" id="res-name">光の聖騎士</h2>
-                        <p class="rpg-job-catch" id="res-catch">鉄壁の守護とガラスのハート</p>
+                        <h2 class="rpg-job-title" id="res-name">勇者</h2>
+                        <p class="rpg-job-catch" id="res-catch">規格外のスーパーヒーロー</p>
                     </div>
+                    
                     <div class="rpg-char-img-area">
-                        <div class="rpg-char-img" id="res-img">🛡️</div>
+                        <img src="" id="res-char-img" class="rpg-char-img-file" alt="Character">
                     </div>
                 </div>
             </div>
@@ -249,82 +249,127 @@
 
                 <div class="rpg-section-box">
                     <h3 class="rpg-sec-title">⚔️ バトルスキル & 報酬</h3>
-                    
                     <div class="skill-list">
+                        
+
                         <div class="skill-item ultimate">
                             <div class="skill-icon">⚡️</div>
                             <div class="skill-text">
-                                <span class="skill-label">必殺技 (Ultimate)</span>
+                                <div class="skill-header-row">
+                                    <span class="skill-label">必殺技 (ULTIMATE)</span>
+                                    <span class="skill-desc-label">：ここぞという時の最大の武器</span>
+                                </div>
                                 <h4 id="res-skill-ult-name">---</h4>
                                 <p id="res-skill-ult-desc">---</p>
                             </div>
                         </div>
+
+
+
                         <div class="skill-item passive">
                             <div class="skill-icon">📜</div>
                             <div class="skill-text">
-                                <span class="skill-label">パッシブ (Passive)</span>
+                                <div class="skill-header-row">
+                                    <span class="skill-label">パッシブ (PASSIVE)</span>
+                                    <span class="skill-desc-label">：無意識に出る日常のクセ</span>
+                                </div>
                                 <h4 id="res-skill-pas-name">---</h4>
                                 <p id="res-skill-pas-desc">---</p>
                             </div>
                         </div>
+
+
+
                         <div class="skill-item weakness">
                             <div class="skill-icon">💀</div>
                             <div class="skill-text">
-                                <span class="skill-label">弱点 (Weakness)</span>
+                                <div class="skill-header-row">
+                                    <span class="skill-label">弱点 (WEAKNESS)</span>
+                                    <span class="skill-desc-label">：ストレスを感じる地雷ポイント</span>
+                                </div>
                                 <h4 id="res-skill-weak-name">---</h4>
                                 <p id="res-skill-weak-desc">---</p>
                             </div>
                         </div>
+
                     </div>
+
+
 
                     <div class="loot-box">
                         <div class="loot-icon">💎</div>
                         <div class="loot-text">
-                            <span class="loot-label">ドロップアイテム (結婚のメリット)</span>
+                            <div class="skill-header-row">
+                                <span class="loot-label">ドロップアイテム</span>
+                                <span class="skill-desc-label">：結婚で得られるメリット</span>
+                            </div>
                             <p id="res-loot-text">---</p>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="rpg-section-box">
                     <h3 class="rpg-sec-title">📜 冒険の攻略ガイド</h3>
                     <div class="quest-slider-container">
+                        
+
                         <div class="rpg-card card-blue quest-slide">
                             <div class="card-img-area">
-                                <span class="placeholder-icon">🆙</span>
+                                <img src="assets/images/card_levelup.png" class="card-img" alt="LEVEL UP">
+                                <div class="card-img-overlay">自分磨き</div>
                             </div>
                             <div class="card-content">
                                 <span class="card-badge">LEVEL UP</span>
+                                <p class="card-desc">あなたがさらに魅力的になるための、成長ミッション</p>
                                 <div id="res-guide-levelup" class="card-text">---</div>
                             </div>
                         </div>
+
+
+
                         <div class="rpg-card card-green quest-slide">
                             <div class="card-img-area">
-                                <span class="placeholder-icon">🕊️</span>
+                                <img src="assets/images/card_line.png" class="card-img" alt="COMMUNICATION">
+                                <div class="card-img-overlay">LINE攻略</div>
                             </div>
                             <div class="card-content">
                                 <span class="card-badge">COMMUNICATION</span>
+                                <p class="card-desc">あの人の心を掴むための、連絡の頻度とコツ</p>
                                 <div id="res-guide-line" class="card-text">---</div>
                             </div>
                         </div>
+
+
+
                         <div class="rpg-card card-pink quest-slide">
                             <div class="card-img-area">
-                                <span class="placeholder-icon">🏰</span>
+                                <img src="assets/images/card_date.png" class="card-img" alt="DATE PLAN">
+                                <div class="card-img-overlay">デート戦略</div>
                             </div>
                             <div class="card-content">
                                 <span class="card-badge">DATE PLAN</span>
+                                <p class="card-desc">二人の距離がグッと縮まる、推奨シチュエーション</p>
                                 <div id="res-guide-date" class="card-text">---</div>
                             </div>
                         </div>
+
+
+
                         <div class="rpg-card card-secret quest-slide">
                             <div class="card-img-area">
-                                <span class="placeholder-icon">🔒</span>
+                                <img src="assets/images/card_secret.png" class="card-img" alt="SECRET KEY">
+                                <div class="card-img-overlay">取扱説明書</div>
                             </div>
                             <div class="card-content">
                                 <span class="card-badge">SECRET KEY</span>
+                                <p class="card-desc">相手を落とす殺し文句と、絶対に踏んではいけない地雷</p>
                                 <div id="res-guide-woo" class="card-text">---</div>
                             </div>
                         </div>
+
+
+
                     </div>
                     <p style="text-align:center; font-size:0.8rem; color:#999; margin-top:10px;">← 左右にスワイプして確認 →</p>
                 </div>
@@ -420,6 +465,10 @@
         </section>
 
     </main>
+
+    <div id="floating-char-layer" class="hidden">
+        <img src="" id="floating-char-img" alt="Navi Chara">
+    </div>
 
     <script src="js/data.js"></script>
     <script src="js/script.js"></script>
