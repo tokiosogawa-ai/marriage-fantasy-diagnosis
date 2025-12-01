@@ -35,16 +35,31 @@ const dom = {
 // 2. 初期化・イベントリスナー
 // =========================================
 
-// ページ読み込み時にURLパラメータをチェック
+// ★修正：ページ読み込み完了時に、確実にチェックを実行
 window.onload = function() {
+    // 1. URLからタイプを取得
     const params = new URLSearchParams(window.location.search);
     const typeParam = params.get('type');
 
-    // データ(typesData)が読み込まれているか確認してから実行
-    if (typeParam && typeof typesData !== 'undefined' && typesData[typeParam]) {
+    // 2. タイプがあり、かつデータが存在する場合
+    if (typeParam && typesData[typeParam]) {
+        console.log("診断結果パラメータを検出:", typeParam);
+
+        // 3. 少しだけ待ってから強制的に画面を切り替える
+        // (ローディング演出などをスキップして結果を出す)
         setTimeout(() => {
+            // ダミーのスコアを入れておく（グラフ表示などでエラーにならないように）
+            scores = { O:50, C:50, P:50, F:50, D:50, S:50, A:50, N:50 }; 
+            
+            // 結果画面を表示
             showResult(typeParam, false);
+            
+            // 画面の表示状態を強制上書き
+            switchScreen("result");
         }, 100);
+    } else {
+        // パラメータがない場合はトップ画面を表示
+        switchScreen("top");
     }
 };
 
@@ -154,8 +169,8 @@ function registerAnswer(value) {
     dom.questionCard.classList.add("fade-out-left");
 
     setTimeout(() => {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
             updateQuestionView();
             dom.questionCard.classList.remove("fade-out-left");
             dom.questionCard.classList.add("fade-in-right");
@@ -163,9 +178,9 @@ function registerAnswer(value) {
                 dom.questionCard.classList.remove("fade-in-right");
                 isNavigating = false;
             }, 50);
-        } else {
-            finishDiagnosis();
-        }
+    } else {
+        finishDiagnosis();
+    }
     }, ANIMATION_DURATION);
 }
 
@@ -217,19 +232,19 @@ function sendToGoogleSheets(resultType) {
 function finishDiagnosis() {
     switchScreen("loading");
     try {
-        const type = calculateType();
+    const type = calculateType();
         setTimeout(() => { saveHistoryLocal(type); sendToGoogleSheets(type); }, 0);
-
-        let step = 0;
-        const loadingText = document.getElementById("loading-text");
-        const interval = setInterval(() => {
-            step++;
+    
+    let step = 0;
+    const loadingText = document.getElementById("loading-text");
+    const interval = setInterval(() => {
+        step++;
             if(step === 1 && loadingText) loadingText.innerText = "運命の相手を探しています...";
-            if(step === 2) {
-                clearInterval(interval);
+        if(step === 2) {
+            clearInterval(interval);
                 showResult(type, false); 
-            }
-        }, 1500);
+        }
+    }, 1500);
     } catch (e) {
         showResult("OPDA", false); // Fallback
     }
@@ -260,11 +275,36 @@ function showResult(typeKey, isCatalog = false) {
     const grandClassKey = typeKey.substring(2, 4);
     const grandClass = grandClasses[grandClassKey];
 
-    setText('res-name', baseData.name);
+    // ★追加：ボディのクラスをリセットして、新しいテーマクラスを付与
+    document.body.className = ''; // 一旦リセット
+    // grandClass.id には "brave", "ruler" などが入っています
+    document.body.classList.add(`theme-${grandClass.id}`);
+
+    // ① ヘッダー情報の注入
+    // ★変更：名前の横にタイプコード（OPDAなど）を小さく追加
+    const nameEl = document.getElementById('res-name');
+    nameEl.innerHTML = `${baseData.name} <span class="type-code-label">(${typeKey})</span>`;
+    
     setText('res-catch', baseData.catch);
     
     setText('res-intro', baseData.desc);
     setText('res-grand-class', grandClass.name.split(" ")[1]);
+
+    // --- ★追加：THE STORYの色をクラスカラーに合わせて変更 ---
+    const introBox = document.querySelector('.rpg-intro-box');
+    const introIcon = document.querySelector('.intro-icon');
+
+    if (introBox && introIcon) {
+        // 1. 箱の上の線をクラスカラーにする
+        introBox.style.borderTopColor = grandClass.color;
+        
+        // 2. アイコンの背景色をクラスカラーにする
+        introIcon.style.backgroundColor = grandClass.color;
+        
+        // 3. アイコンの影の色も合わせて調整（少し透明にする）
+        introIcon.style.boxShadow = `0 4px 10px ${grandClass.color}66`; // 末尾の66は透明度40%
+    }
+    // --- ★追加ここまで ---
     
     // 画像表示処理（修正版）
     const charImg = document.getElementById('res-char-img');
@@ -374,16 +414,27 @@ function showResult(typeKey, isCatalog = false) {
     // ★追加：説明文の書き換え
     document.querySelector('.card-secret .card-desc').textContent = `${jobName}を落とす殺し文句と、絶対に踏んではいけない地雷`;
 
-    // 英雄リスト
+    // ⑤ 異界の英雄
     const soulContainer = document.getElementById('res-soul-tags');
     soulContainer.innerHTML = '';
-    if(baseData.celebs){
+    if (baseData.celebs) {
         baseData.celebs.forEach(c => {
             const div = document.createElement('div');
-            div.className = 'celeb-tag';
+            
+            // カテゴリ判定ロジック
+            let categoryClass = 'tag-default';
+            if (c.type && c.type.includes('男')) categoryClass = 'tag-male';
+            else if (c.type && c.type.includes('女')) categoryClass = 'tag-female';
+            else if (c.type && c.type.includes('キャラ')) categoryClass = 'tag-char';
+            else if (c.type && (c.type.includes('海外') || c.type.includes('偉人'))) categoryClass = 'tag-global';
+            else if (c.type && (c.type.includes('芸人') || c.type.includes('文化人') || c.type.includes('論破'))) categoryClass = 'tag-fun';
+
+            div.className = `celeb-tag ${categoryClass}`;
+            
             const name = typeof c === 'string' ? c : c.name;
             const typeLabel = typeof c === 'string' ? 'HERO' : c.type;
-            div.innerHTML = `<span class="type">${typeLabel}</span><span>${name}</span>`;
+            
+            div.innerHTML = `<span class="type">${typeLabel}</span><span class="name">${name}</span>`;
             soulContainer.appendChild(div);
         });
     }
@@ -459,9 +510,19 @@ function shareTwitter() {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
 }
 
+// LINE シェア (結果テキスト付き)
 function shareLine() {
+    // 1. 画面から診断結果の文字を取得
+    const name = document.getElementById('res-name').textContent; // 勇者 など
+    const type = document.getElementById('res-grand-class').textContent; // BRAVE など
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
-    window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`, '_blank');
+
+    // 2. 送る文章を作成
+    const text = `私の結婚ファンタジー適正は…\n【${name}】（${type}タイプ）でした！\n\n相性の良いパートナーも判明！？\n⚔️ あなたも診断してみる？\n#結婚ファンタジー診断\n${shareUrl}`;
+    
+    // 3. LINEアプリを起動してテキストを渡す
+    // (social-plugins... ではなく line.me/R/share を使うとテキストが送れます)
+    window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function copyToClipboard() {
@@ -561,34 +622,49 @@ function createListItem(container, rel, rankLabel, myName, isWorst) {
     container.appendChild(div);
 }
 
+// シミュレーター更新処理 (修正版)
 function updateSimulator(myCode, targetCode) {
     if (!targetCode) {
         document.getElementById('sim-default-view').classList.remove('hidden');
         document.getElementById('sim-result-card').classList.add('hidden');
         return;
     }
+
     const myData = typesData[myCode];
     const targetData = typesData[targetCode];
     const rel = myData.relationships.find(r => r.target === targetCode);
+    
+    // ランク情報の取得
     const rankMark = rel ? rel.rank : "-";
     const rankInfo = getRankDetail(rankMark);
+    
+    // ★セット効果名 (effect) を正しく取得して表示
+    // データ内に `effect` があればそれを使い、なければデフォルト文言
     const effectTitle = rel && rel.effect ? `『${rel.effect}』` : `【${myData.name}】×【${targetData.name}】`;
-    const effectName = rel && rel.effect ? rel.effect : `連携技：クロス・${targetData.name}`;
+    
+    // 説明文 (desc)
     const descText = rel ? rel.desc : "データがありません。";
     const buffs = rel ? rel.buffs : [];
 
+    // 画面切り替え
     document.getElementById('sim-default-view').classList.add('hidden');
     const card = document.getElementById('sim-result-card');
     card.classList.remove('hidden');
+    
+    // 要素へのセット
     document.getElementById('sim-my-name').textContent = myData.name;
     document.getElementById('sim-target-name').textContent = targetData.name;
     document.getElementById('sim-rank-value').textContent = rankInfo.char;
     document.getElementById('sim-rank-desc').textContent = rankInfo.label;
     document.getElementById('sim-rank-value').style.color = rankInfo.color;
-    setText('sim-rel-title', effectTitle);     
-    setText('sim-effect-name', effectName);    
-    setText('sim-desc-text', descText);
+
+    // ★セット効果名を表示するIDを "sim-effect-title" に統一
+    setText('sim-effect-title', effectTitle);     
     
+    // 詳細テキスト
+    setText('sim-desc-text', descText);
+
+    // バフリスト生成
     const buffsContainer = document.getElementById('sim-buffs-list');
     buffsContainer.innerHTML = '';
     if (buffs.length > 0) {
@@ -602,6 +678,7 @@ function updateSimulator(myCode, targetCode) {
         buffsContainer.innerHTML = '<div class="buff-item">データ収集中...</div>';
     }
 
+    // スクロール
     setTimeout(() => {
         card.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);

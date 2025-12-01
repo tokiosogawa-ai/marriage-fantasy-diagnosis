@@ -750,7 +750,7 @@ button { font-family: inherit; }
 
     /* 右側：説明文エリア */
     .stat-desc-text {
-        flex: 1;
+    flex: 1;
         max-width: none;    /* ★幅制限（500px）を解除して画面いっぱい使う */
         border-left: none;
         padding-left: 0;
@@ -1898,17 +1898,22 @@ button { font-family: inherit; }
     padding-bottom: 0;
 }
 
-/* TABOO 警告スタイル */
+/* TABOO 警告スタイル（修正版） */
 .taboo-block {
     display: block;
-    margin-top: 8px;       /* 上に隙間を空ける */
-    padding: 8px 12px;
-    background: #fff0f0;   /* 薄い赤背景 */
+    
+    /* ★変更：隙間を広げる（8px → 25px） */
+    /* これで「1行分」くらいの余白が生まれます */
+    margin-top: 25px;       
+    
+    padding: 10px 15px;     /* 内側の余白も少し調整 */
+    background: #fff0f0;    /* 薄い赤背景 */
     border-left: 4px solid #ff4757; /* 左に赤い線 */
     border-radius: 4px;
     color: #c0392b;
     font-weight: bold;
     font-size: 0.9rem;
+    line-height: 1.6;       /* 行間も読みやすく */
 }
 
 .taboo-icon {
@@ -1964,80 +1969,129 @@ button { font-family: inherit; }
 }
 
 /* =========================================
-   Soul Resonators Slider (横スクロール化)
+   Soul Resonators (Smart Design)
 ========================================= */
 
-/* スライダーコンテナ */
+/* スライダーコンテナ（変更なし・維持） */
 .soul-slider-container {
     display: flex;
-    overflow-x: auto;              /* 横スクロール有効 */
-    scroll-snap-type: x mandatory; /* スナップ有効 */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    gap: 15px;
-    padding: 10px 5px 20px 5px;    /* 影のために下を空ける */
-    margin: 0 -20px;               /* 画面端まで広げる */
-    padding-left: 20px;            /* 最初の余白 */
-    padding-right: 20px;           /* 最後の余白 */
-    
-    /* スクロールバーを隠す */
-    scrollbar-width: none; 
-    -ms-overflow-style: none;
+    gap: 12px;
+    padding: 10px 5px 25px 5px;
+    margin: 0 -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rpg-gold) #f0f0f0;
+    cursor: grab;
 }
-.soul-slider-container::-webkit-scrollbar {
-    display: none;
-}
+.soul-slider-container:active { cursor: grabbing; }
+.soul-slider-container::-webkit-scrollbar { display: block; height: 6px; }
+.soul-slider-container::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 10px; }
+.soul-slider-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
 
-/* 英雄タグ（カード） */
+/* 英雄タグ（ベーススタイル） */
 .celeb-tag {
-    /* グリッドのスタイルを上書きして固定幅にする */
-    flex: 0 0 160px;  /* ★幅を固定（スマホで見やすいサイズ） */
-    scroll-snap-align: start; /* 左端に合わせる */
+    flex: 0 0 140px;        /* 少し幅をスマートに */
+    scroll-snap-align: start;
     
-    background: linear-gradient(135deg, #2c3e50, #4b6cb7);
-    color: #fff;
-    padding: 15px 10px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: bold;
+    /* ベース設定 */
+    border-radius: 12px;    /* 丸みを増やす */
+    padding: 12px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    border: 2px solid #c5a059;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     position: relative;
     overflow: hidden;
-    line-height: 1.3;
-    min-height: 90px; /* 高さを揃える */
+    min-height: 85px;
+    
+    /* 枠線を廃止し、影で立体感を出す */
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
 }
 
+.celeb-tag:hover {
+    transform: translateY(-3px);
+}
+
+/* 光沢エフェクト（控えめに） */
 .celeb-tag::after {
     content: '';
-    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
-    transform: rotate(45deg); pointer-events: none;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom right, rgba(255,255,255,0.2) 0%, transparent 50%);
+    pointer-events: none;
 }
 
-/* タイプラベル */
+/* --- カテゴリ別カラー定義 --- */
+
+/* 男性芸能人：クールな青 */
+.celeb-tag.tag-male {
+    background: linear-gradient(135deg, #2980b9, #2c3e50);
+}
+.celeb-tag.tag-male .type { color: #a9d6ff; background: rgba(0,0,0,0.3); }
+
+/* 女性芸能人：華やかなピンク/赤 */
+.celeb-tag.tag-female {
+    background: linear-gradient(135deg, #e84393, #6c5ce7);
+}
+.celeb-tag.tag-female .type { color: #ffcce6; background: rgba(0,0,0,0.3); }
+
+/* キャラ：神秘的な紫/夜空 */
+.celeb-tag.tag-char {
+    background: linear-gradient(135deg, #8e44ad, #34495e);
+}
+.celeb-tag.tag-char .type { color: #e0c3fc; background: rgba(0,0,0,0.3); }
+
+/* 海外・偉人：高貴なゴールド/ブロンズ */
+.celeb-tag.tag-global {
+    background: linear-gradient(135deg, #d35400, #f39c12);
+}
+.celeb-tag.tag-global .type { color: #ffeaa7; background: rgba(0,0,0,0.3); }
+
+/* 芸人：ポップな緑/オレンジ */
+.celeb-tag.tag-fun {
+    background: linear-gradient(135deg, #27ae60, #f1c40f);
+}
+.celeb-tag.tag-fun .type { color: #dff9fb; background: rgba(0,0,0,0.3); }
+
+/* デフォルト（予備） */
+.celeb-tag.tag-default {
+    background: linear-gradient(135deg, #7f8c8d, #2c3e50);
+}
+
+/* --- テキストスタイル --- */
+
+/* ラベル（芸能人、キャラなど） */
 .celeb-tag .type {
     font-size: 0.6rem;
-    background: #c5a059;
-    color: #222;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-bottom: 8px;
+    font-weight: bold;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-bottom: 6px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    white-space: nowrap;
+    display: inline-block;
 }
 
-/* PC画面での調整（少し幅を広げる） */
+/* 名前 */
+.celeb-tag .name {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    line-height: 1.3;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* PC画面調整 */
 @media (min-width: 768px) {
     .celeb-tag {
-        flex: 0 0 180px;
-        min-height: 100px;
+        flex: 0 0 160px; /* PCでは少し広く */
+        min-height: 95px;
     }
 }
 
@@ -2801,4 +2855,92 @@ button { font-family: inherit; }
     opacity: 0;
     transform: translateY(50px); /* 下に隠れる動き */
     pointer-events: none;
+}
+
+/* =========================================
+   Dynamic Theme Coloring (属性別テーマカラー)
+========================================= */
+
+/* --- 1. 属性ごとのカラー定義 --- */
+
+/* Brave (赤) */
+body.theme-brave {
+    --theme-color: #ff4757;
+    --theme-light: #fff0f0;
+    --theme-border: #ff6b81;
+}
+
+/* Ruler (青) */
+body.theme-ruler {
+    --theme-color: #5352ed;
+    --theme-light: #f0f8ff;
+    --theme-border: #70a1ff;
+}
+
+/* Tactician (緑) ※元の紫から変更したい場合はここで調整 */
+/* 今回は紫のまま行きます（Tactician=知性=紫のイメージ） */
+body.theme-tactician {
+    --theme-color: #8854d0; /* 紫 */
+    --theme-light: #f3e5f5;
+    --theme-border: #a55eea;
+}
+
+/* Guardian (黄/緑) */
+body.theme-guardian {
+    --theme-color: #ffa502; /* オレンジ/黄色 */
+    --theme-light: #fffaf0;
+    --theme-border: #ffc048;
+}
+
+/* --- 2. 定義した色を各パーツに適用 --- */
+
+/* セクションタイトルの左線 */
+body[class*="theme-"] .rpg-sec-title {
+    border-left-color: var(--theme-color);
+    color: var(--theme-color); /* 文字色も合わせる */
+}
+
+/* 背景色（全体をほんのり色付ける） */
+body[class*="theme-"] {
+    background: linear-gradient(180deg, var(--theme-light) 0%, #ffffff 100%);
+}
+
+/* 仕切り線や枠線 */
+body[class*="theme-"] .rpg-section-box {
+    border-bottom-color: var(--theme-border);
+}
+
+/* THE STORY のアイコンと線 */
+body[class*="theme-"] .rpg-intro-box {
+    border-top-color: var(--theme-color);
+}
+body[class*="theme-"] .intro-icon {
+    background-color: var(--theme-color);
+    box-shadow: 0 4px 10px var(--theme-border);
+}
+
+/* 職業名（デカ文字）の色 */
+body[class*="theme-"] .rpg-job-title {
+    /* ヘッダー内の文字色は白のままが良いので、あえて上書きしない */
+    /* もしここも変えたい場合は color: var(--theme-color); */
+}
+
+/* フッターボタンなど */
+body[class*="theme-"] .btn-primary {
+    background-color: var(--theme-color);
+    box-shadow: 0 4px 15px var(--theme-border);
+}
+
+/* =========================================
+   Fix: Type Code Display (タイプコード表示)
+========================================= */
+
+.type-code-label {
+    font-size: 0.5em;   /* タイトルの半分のサイズに */
+    font-weight: normal; /* 太字を解除 */
+    opacity: 0.9;       /* 少しだけ薄く */
+    margin-left: 8px;   /* 名前との間隔 */
+    font-family: 'Roboto', sans-serif; /* 英数字用のフォント */
+    vertical-align: middle; /* 高さ調整 */
+    letter-spacing: 1px;
 }
