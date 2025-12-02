@@ -164,7 +164,9 @@
                     <span class="progress-count"><span id="current-num">1</span> / <span id="total-num">56</span></span>
                 </div>
                 <div class="progress-bar-bg">
-                    <div id="progress-bar" class="progress-bar-fill"></div>
+                    <div id="progress-bar" class="progress-bar-fill">
+                        <img src="assets/images/icon_walker.png" class="progress-walker" alt="Walker">
+                    </div>
                 </div>
             </div>
 
@@ -176,18 +178,22 @@
                         <span class="icon">💖</span>
                         <span class="label">すごく<br>そう</span>
                     </button>
+                    
                     <button class="option-btn btn-yes-small" data-value="3">
                         <span class="icon">🩷</span>
                         <span class="label">やや<br>そう</span>
                     </button>
+                    
                     <button class="option-btn btn-neutral" data-value="2">
                         <span class="icon">⚪️</span>
                         <span class="label">どちらとも<br>いえない</span>
                     </button>
+                    
                     <button class="option-btn btn-no-small" data-value="1">
                         <span class="icon">💧</span>
                         <span class="label">あまり<br>違う</span>
                     </button>
+                    
                     <button class="option-btn btn-no-big" data-value="0">
                         <span class="icon">💎</span>
                         <span class="label">全然<br>違う</span>
@@ -468,6 +474,11 @@
 
     <div id="floating-char-layer" class="hidden">
         <img src="" id="floating-char-img" alt="Navi Chara">
+    </div>
+
+    <div id="question-navi-layer" class="navi-character-area hidden">
+        <img src="assets/images/navi_fairy.png" class="navi-img" alt="Fairy">
+        <div class="navi-fukidashi">直感で答えてね！</div>
     </div>
 
     <script src="js/data.js"></script>

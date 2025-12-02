@@ -125,6 +125,7 @@ function backToTop() {
 }
 
 function switchScreen(screenName) {
+    // 画面切り替え
     Object.keys(screens).forEach(key => {
         if (key === screenName) return;
         screens[key].classList.remove("active");
@@ -134,19 +135,30 @@ function switchScreen(screenName) {
     target.classList.remove("hidden");
     setTimeout(() => { target.classList.add("active"); }, 50);
     
-    // ★追加：結果画面以外では浮遊キャラを隠す
+    // --- ★ここを追加：キャラの出し分け制御 ---
+
+    // 1. 結果画面のキャラ（勇者など）
     const floatLayer = document.getElementById('floating-char-layer');
     if (floatLayer) {
         if (screenName === 'result') {
-            // 結果画面の時は showResult 側で制御するので何もしない（または表示）
+            // showResult側で制御するのでここでは何もしない（消さない）
         } else {
             floatLayer.classList.add('hidden');
+        }
+    }
+
+    // 2. 質問画面の妖精
+    const naviLayer = document.getElementById('question-navi-layer');
+    if (naviLayer) {
+        if (screenName === 'question') {
+            naviLayer.classList.remove('hidden'); // 質問中は表示
+        } else {
+            naviLayer.classList.add('hidden');    // それ以外は隠す
         }
     }
 }
 
 function updateQuestionView() {
-    // data.jsのquestionsを使用
     const q = questions[currentQuestionIndex];
     dom.questionText.innerText = `Q${currentQuestionIndex + 1}. ${q.text}`;
     dom.currentNum.innerText = currentQuestionIndex + 1;
@@ -156,6 +168,40 @@ function updateQuestionView() {
     dom.progressBar.style.width = `${pct}%`;
 
     dom.backBtn.style.display = (currentQuestionIndex === 0) ? "none" : "inline-block";
+
+    // ★修正：セリフを「ワクワク系」に変更
+    const fukidashi = document.querySelector('.navi-fukidashi');
+    if (fukidashi) {
+        let msg = "";
+        const current = currentQuestionIndex + 1;
+        const total = questions.length;
+
+        // 進捗に応じたつぶやき
+        if (current === 1) {
+            msg = "直感で答えてみてね！";
+        } else if (current === 10) {
+            msg = "どんなタイプになるのかな？"; // ★変更
+        } else if (current === 20) {
+            msg = "運命の人が見つかるかも…！"; // ★変更
+        } else if (current === 30) {
+            msg = "折り返し地点だよ！";
+        } else if (current === 40) {
+            msg = "あなたの性格が見えてきたよ"; // ★変更
+        } else if (current === 50) {
+            msg = "ラストスパート！！";
+        } else if (current === total) {
+            msg = "最後の質問だよ！";
+        }
+
+        // メッセージがある時だけ更新（毎回コロコロ変えない）
+        if (msg) {
+            fukidashi.textContent = msg;
+            // ポンッと跳ねるアニメーション
+            fukidashi.style.animation = 'none';
+            fukidashi.offsetHeight; /* リフロー */
+            fukidashi.style.animation = 'pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        }
+    }
 }
 
 function registerAnswer(value) {
@@ -499,32 +545,37 @@ function renderChart() {
     if(container) container.innerHTML = chartHTML;
 }
 
-// シェア機能
+// =========================================
+// シェア機能 (RPG風テキスト修正版)
+// =========================================
+
 function getBaseUrl() { return window.location.origin + window.location.pathname; }
 
+// X (Twitter) シェア
 function shareTwitter() {
     const name = document.getElementById('res-name').textContent;
     const type = document.getElementById('res-grand-class').textContent;
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
-    const text = `私の結婚ファンタジー適正は…\n【${name}】（${type}タイプ）でした！\n\n相性の良いパートナーも判明！？\n⚔️ あなたも診断してみる？\n#結婚ファンタジー診断 #RPG診断\n`;
+    
+    // ★修正：タイトルとハッシュタグを変更
+    const text = `私の【RPG風ファンタジー診断】結果は…\n🛡️ 職業：${name}（${type}）でした！\n\n運命のパートナーや攻略法も判明！？\n⚔️ あなたも冒険に出る👇\n#RPG風ファンタジー診断\n`;
+    
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
 }
 
-// LINE シェア (結果テキスト付き)
+// LINE シェア
 function shareLine() {
-    // 1. 画面から診断結果の文字を取得
-    const name = document.getElementById('res-name').textContent; // 勇者 など
-    const type = document.getElementById('res-grand-class').textContent; // BRAVE など
+    const name = document.getElementById('res-name').textContent;
+    const type = document.getElementById('res-grand-class').textContent;
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
 
-    // 2. 送る文章を作成
-    const text = `私の結婚ファンタジー適正は…\n【${name}】（${type}タイプ）でした！\n\n相性の良いパートナーも判明！？\n⚔️ あなたも診断してみる？\n#結婚ファンタジー診断\n${shareUrl}`;
+    // ★修正：LINE用のテキスト（URL込み）
+    const text = `【RPG風ファンタジー診断】\n私の職業は…\n🛡️ ${name}（${type}）でした！\n\n運命のパートナーや、取扱説明書も判明！？\n⚔️ あなたも診断してみる？\n\n▼診断はこちら\n${shareUrl}`;
     
-    // 3. LINEアプリを起動してテキストを渡す
-    // (social-plugins... ではなく line.me/R/share を使うとテキストが送れます)
     window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
+// URLコピー（変更なし、念のため掲載）
 function copyToClipboard() {
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
     navigator.clipboard.writeText(shareUrl).then(() => {
