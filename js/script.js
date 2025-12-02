@@ -79,11 +79,26 @@ if(dom.backBtn) {
     dom.backBtn.addEventListener("click", prevQuestion);
 }
 
+// ④ メニュー制御 (妖精の表示切り替え追加版)
 document.getElementById("menu-btn").addEventListener("click", () => {
     dom.navOverlay.classList.remove("hidden");
+    
+    // ★追加：メニューを開いたら妖精を隠す
+    const naviLayer = document.getElementById('question-navi-layer');
+    if (naviLayer) naviLayer.classList.add("hidden");
 });
+
 document.getElementById("close-btn").addEventListener("click", () => {
     dom.navOverlay.classList.add("hidden");
+    
+    // ★追加：メニューを閉じたら、今が「質問画面」なら妖精を復活させる
+    const naviLayer = document.getElementById('question-navi-layer');
+    const questionScreen = document.getElementById('screen-question');
+    
+    // 質問画面が表示中(active)なら、妖精のhiddenを外す
+    if (naviLayer && questionScreen.classList.contains('active')) {
+        naviLayer.classList.remove("hidden");
+    }
 });
 
 const catalogBtn = document.getElementById("menu-catalog-btn");
