@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>診断の仕組み | RPG風ファンタジー診断</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;500&family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-ruler" style="text-align: center;">
+
+    <button id="menu-btn" class="menu-btn" aria-label="メニューを開く">≡</button>
+
+    <nav id="nav-overlay" class="nav-overlay hidden">
+        <button id="close-btn" class="close-btn">×</button>
+        <ul class="nav-list">
+            <li><a href="index.html">🏠 酒場（トップ）に戻る</a></li>
+            <li><a href="index.html?type=OPDA&mode=catalog">📖 職業図鑑を見る</a></li>
+            <li><a href="logic.html" style="color:var(--primary);">🔍 診断の仕組み</a></li> 
+            <li><a href="#" onclick="copySiteUrl()">🔗 リンクをコピー</a></li>
+            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSelTwy_FYW7Fm5LcI7Zv51n0xZ5gHDHYGqlZKNZ1fxWf66F9w/viewform?usp=publish-editor" target="_blank" class="nav-contact">📮 ご意見・感想はこちら</a></li>
+        </ul>
+    </nav>
+
+    <div id="toast" class="toast hidden">リンクをコピーしました！</div>
+
+    <header style="padding: 20px; text-align: center;">
+        <a href="index.html" style="font-weight:bold; color:#555; text-decoration:none;">↩︎ 酒場（トップ）に戻る</a>
+    </header>
+
+    <main class="container" style="padding-top: 20px; max-width: 800px; margin: 0 auto;">
+        
+        <div class="logic-header-img-container">
+            <img src="assets/images/bg_logic.jpg" class="logic-header-img" alt="ココロの解体新書">
+        </div>
+
+        <div class="rpg-paper-container" style="padding-top: 60px; text-align: center;">
+
+            <div class="rpg-section-box" style="border:none;">
+                <h2 class="section-title" style="margin-bottom: 10px;">ココロの解体新書</h2>
+                <p style="font-family:serif; color:#8d6df9; letter-spacing: 2px; font-weight:bold; margin-bottom: 30px;">The Grimoire of Hearts</p>
+                <div class="rpg-intro-box" style="margin-bottom: 40px; margin-left: auto; margin-right: auto; max-width: 600px;">
+                    <span class="intro-icon">🔮</span>
+                    <h3 class="intro-title">PROLOGUE</h3>
+                    <div class="intro-text-wrapper">
+                        <p style="text-align: justify; line-height: 1.8;">
+                            この診断は、行動心理学とAIが導き出した膨大なデータを、冒険の物語に翻訳したものです。<br><br>
+                            あなたの心が<strong>「4つの天秤」</strong>のどちらに傾くかを知るだけで、隠れた性格や恋愛のクセが<strong>「16種類の職業」</strong>として浮かび上がります。<br><br>
+                            これは、あなた自身を知り、運命の相手を見つけるための小さな魔導書です。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rpg-section-box">
+                <h3 class="rpg-sec-title" style="justify-content:center; border:none; text-align:center;">第1章：4つの天秤</h3>
+                <p style="margin-bottom:30px; font-size:0.9rem; color:#666;">性格を形作る相反する4つの要素。<br>あなたはどちらに傾いていますか？</p>
+
+                <div class="logic-card" style="border-top: 4px solid #ff6b6b;">
+                    <div class="logic-header" style="background:linear-gradient(135deg, #ff9ca6, #ff6b6b);">
+                        <span class="logic-icon">🎨</span> Style（表現・自己）
+                    </div>
+                    <div class="logic-body">
+                        <p class="axis-intro" style="margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #555; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
+                            <strong>【 第1の天秤：自己表現 】</strong><br>
+                            「個」としての在り方を決める天秤です。独自の美学を貫いて生きるか、周囲との調和を大切にして生きるか。あなたの魂が放つ「色」を決定づける要素です。
+                        </p>
+                        <div class="logic-vs">
+                            <div class="logic-side">
+                                <strong class="logic-char color-gold">O</strong>
+                                <span class="logic-name">Originality</span>
+                                <p>「自分は自分」。<br>独自の美学を貫く<br>芯のある主人公タイプ。</p>
+                            </div>
+                            <div class="logic-center">vs</div>
+                            <div class="logic-side">
+                                <strong class="logic-char color-teal">C</strong>
+                                <span class="logic-name">Cooperative</span>
+                                <p>「みんなと一緒」。<br>空気を読んで調和を作る<br>愛され調整役。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logic-card" style="border-top: 4px solid #4facfe;">
+                    <div class="logic-header" style="background:linear-gradient(135deg, #6db3f8, #4facfe);">
+                        <span class="logic-icon">⚖️</span> Rule（規範・判断）
+                    </div>
+                    <div class="logic-body">
+                        <p class="axis-intro" style="margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #555; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
+                            <strong>【 第2の天秤：判断基準 】</strong><br>
+                            物事を決める際の「ものさし」となる天秤です。社会的な規範や計画性を重んじるか、その場の直感や自由な感性を信じるか。人生の岐路でどちらの道を選ぶかを示します。
+                        </p>
+                        <div class="logic-vs">
+                            <div class="logic-side">
+                                <strong class="logic-char color-purple">P</strong>
+                                <span class="logic-name">Principled</span>
+                                <p>「ルール重視」。<br>約束や時間を守り、計画通りに物事を進めることを好むタイプ。正義感が強く、曲がったことが嫌いなしっかり者です。</p>
+                            </div>
+                            <div class="logic-center">vs</div>
+                            <div class="logic-side">
+                                <strong class="logic-char color-green">F</strong>
+                                <span class="logic-name">Flexible</span>
+                                <p>「ノリ重視」。<br>その場の感情や直感を信じ、計画よりも楽しさを優先するタイプ。束縛を嫌い、自由に生きることに価値を見出します。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logic-card" style="border-top: 4px solid #ffeb3b;">
+                    <div class="logic-header" style="background:linear-gradient(135deg, #ffcc5c, #ffeb3b); color:#555;">
+                        <span class="logic-icon">🤝</span> Role（役割・行動）
+                    </div>
+                    <div class="logic-body">
+                        <p class="axis-intro" style="margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #555; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
+                            <strong>【 第3の天秤：立ち位置 】</strong><br>
+                            人間関係における「役割」を決める天秤です。自らハンドルを握って先頭を走るドライバーか、あるいは助手席から全体を支えるナビゲーターか。パーティ内での戦闘スタイルを表します。
+                        </p>
+                        <div class="logic-vs">
+                            <div class="logic-side">
+                                <strong class="logic-char color-gold">D</strong>
+                                <span class="logic-name">Driver</span>
+                                <p>「私が決める」。<br>自ら意思決定を行い、周囲をぐいぐい引っ張っていくリーダータイプ。責任感が強く、頼られることに喜びを感じます。</p>
+                            </div>
+                            <div class="logic-center">vs</div>
+                            <div class="logic-side">
+                                <strong class="logic-char color-green">S</strong>
+                                <span class="logic-name">Supporter</span>
+                                <p>「支えたい」。<br>誰かの後ろをついていくことや、サポートすることに喜びを感じるタイプ。一歩引いた位置から、全体を優しく見守ります。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logic-card" style="border-top: 4px solid #2ed573;">
+                    <div class="logic-header" style="background:linear-gradient(135deg, #8de0a6, #2ed573);">
+                        <span class="logic-icon">🌱</span> Focus（志向・エネルギー）
+                    </div>
+                    <div class="logic-body">
+                        <p class="axis-intro" style="margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #555; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
+                            <strong>【 第4の天秤：エネルギー 】</strong><br>
+                            人生のエネルギーが向かう「方向」を示す天秤です。現状に満足せずさらなる高みを目指す上昇志向か、あるいは日々の平穏と安らぎを愛する現状肯定派か。冒険の目的そのものです。
+                        </p>
+                        <div class="logic-vs">
+                            <div class="logic-side">
+                                <strong class="logic-char color-gold">A</strong>
+                                <span class="logic-name">Ambitious</span>
+                                <p>「もっと上へ」。<br>現状に満足せず、常に成長や成功、新しい刺激を追い求めるタイプ。高い目標を持ち、それに向かって努力を惜しみません。</p>
+                            </div>
+                            <div class="logic-center">vs</div>
+                            <div class="logic-side">
+                                <strong class="logic-char color-teal">N</strong>
+                                <span class="logic-name">Natural</span>
+                                <p>「今のままで」。<br>変化や競争よりも、安定した日常や心の平穏を愛するタイプ。日々の小さな幸せを大切にし、無理のない生き方を好みます。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rpg-section-box">
+                <h3 class="rpg-sec-title" style="justify-content:center; border:none; text-align:center;">第2章：ココロの属性<br><span style="font-size:0.8rem;">(Grand Type)</span></h3>
+                <p style="margin-bottom:20px; font-size:0.9rem; color:#666;">「役割」と「志向」が交差する時、<br>あなたの恋愛スタイルは4つの属性に分かれます。</p>
+                
+                <div class="quest-slider-container" style="justify-content: center; flex-wrap: wrap; overflow: visible;">
+                    
+                    <div class="rpg-card grand-type-card" style="width: 100%; max-width: 300px; margin: 10px; border-top: 4px solid #ff4757;">
+                        <div class="card-bg-layer" style="background-image: url('assets/images/grand_brave.jpg'); background-position: 75% center;"></div>
+                        <div class="card-overlay-layer"></div>
+                        <div class="card-content" style="align-items: center;">
+                            <span class="card-badge" style="background:#ff4757;">🔥 Brave (牽引者)</span>
+                            <p style="font-weight:bold; color:#ff4757;">主導(D) × 野心(A)</p>
+                            <p style="font-size:0.9rem;">情熱的な主人公タイプ。<br>「私についてきて」とリードし、二人で新しい世界を切り拓いていくエネルギッシュな恋をします。</p>
+                            <p style="font-size:0.75rem; margin-top:10px; opacity:0.9; background:rgba(0,0,0,0.3); padding:5px 10px; border-radius:10px;">
+                                [ 勇者・魔王・盗賊・戦士 ]
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="rpg-card grand-type-card" style="width: 100%; max-width: 300px; margin: 10px; border-top: 4px solid #5352ed;">
+                        <div class="card-bg-layer" style="background-image: url('assets/images/grand_ruler.jpg');"></div>
+                        <div class="card-overlay-layer"></div>
+                        <div class="card-content" style="align-items: center;">
+                            <span class="card-badge" style="background:#5352ed;">♟️ Ruler (支配者)</span>
+                            <p style="font-weight:bold; color:#5352ed;">主導(D) × 安定(N)</p>
+                            <p style="font-size:0.9rem;">しっかり者のリーダータイプ。<br>ルールや計画を大切にし、安定した家庭や関係を築くことに責任感を持つ頼れる存在です。</p>
+                            <p style="font-size:0.75rem; margin-top:10px; opacity:0.9; background:rgba(0,0,0,0.3); padding:5px 10px; border-radius:10px;">
+                                [ ギルドマスター・テンプルナイト<br>魔物使い・魔法使い ]
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="rpg-card grand-type-card" style="width: 100%; max-width: 300px; margin: 10px; border-top: 4px solid #2ed573;">
+                        <div class="card-bg-layer" style="background-image: url('assets/images/grand_tactician.jpg');"></div>
+                        <div class="card-overlay-layer"></div>
+                        <div class="card-content" style="align-items: center;">
+                            <span class="card-badge" style="background:#2ed573;">🦉 Tactician (参謀)</span>
+                            <p style="font-weight:bold; color:#2ed573;">支援(S) × 野心(A)</p>
+                            <p style="font-size:0.9rem;">賢いサポータータイプ。<br>一歩引いた場所から相手を支え、パートナーを成功へと導くことに喜びを感じる「勝利の立役者」です。</p>
+                            <p style="font-size:0.75rem; margin-top:10px; opacity:0.9; background:rgba(0,0,0,0.3); padding:5px 10px; border-radius:10px;">
+                                [ 呪術師・賢者・商人・錬金術師 ]
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="rpg-card grand-type-card" style="width: 100%; max-width: 300px; margin: 10px; border-top: 4px solid #ffa502;">
+                        <div class="card-bg-layer" style="background-image: url('assets/images/grand_guardian.jpg'); background-position: 25% center;"></div>
+                        <div class="card-overlay-layer"></div>
+                        <div class="card-content" style="align-items: center;">
+                            <span class="card-badge" style="background:#ffa502;">🛡️ Guardian (守護者)</span>
+                            <p style="font-weight:bold; color:#ffa502;">支援(S) × 安定(N)</p>
+                            <p style="font-size:0.9rem;">癒やしの聖職者タイプ。<br>変化よりも平穏を愛し、どんな時も優しく受け入れてくれる、絶対的な安心感の持ち主です。</p>
+                            <p style="font-size:0.75rem; margin-top:10px; opacity:0.9; background:rgba(0,0,0,0.3); padding:5px 10px; border-radius:10px;">
+                                [ 僧侶・神父・吟遊詩人・鍛冶職人 ]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rpg-section-box" style="border:none;">
+                <h3 class="rpg-sec-title" style="justify-content:center; border:none; text-align:center;">第3章：相性のヒミツ</h3>
+                <p style="margin-bottom:30px; font-size:0.9rem; color:#666;">なぜか惹かれる人、どうしても合わない人。<br>そこには4つの「相性の法則」が隠されています。</p>
+
+                <div class="law-card rank-1" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <img src="assets/images/law_role.jpg" class="law-img" alt="役割の補完">
+                        <div class="law-content">
+                            <h4>1. 凸凹の法則：役割の補完 <span style="font-size:0.8em; font-weight:normal; color:#d35400;">(Role)</span></h4>
+                            <p>
+                                恋愛で最も重要なのは「役割分担」です。<strong>「引っ張りたい人(D)」</strong>と<strong>「支えたい人(S)」</strong>。この二人が組むと、運転手とナビのように完璧な補完関係が成立します。<br>
+                                ここは<strong>「お互いに違うタイプ」の方が、ぶつからずにうまくいきます。</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; padding:15px; background:rgba(211, 84, 0, 0.05); border-radius:8px; width:100%; box-sizing:border-box; border:1px dashed rgba(211, 84, 0, 0.3);">
+                        <p style="font-size:0.8rem; color:#d35400; font-weight:bold; margin:0 0 5px 0;">⚠️ 合わない場合 (同じ役割同士)</p>
+                        <p style="font-size:0.8rem; color:#666; margin:0; line-height:1.5;">
+                            <strong>D同士：</strong>ハンドルの奪い合いになり、「どっちが正しいか」で常に喧嘩が絶えません。<br>
+                            <strong>S同士：</strong>「なんでもいいよ」「合わせるよ」の譲り合いで、目的地が決まらず停滞します。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="law-card rank-2" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <img src="assets/images/law_value.jpg" class="law-img" alt="価値観の同調">
+                        <div class="law-content">
+                            <h4>2. リズムの法則：価値観の同調 <span style="font-size:0.8em; font-weight:normal; color:#2980b9;">(Rule)</span></h4>
+                            <p>
+                                生活リズムや金銭感覚の「ここちよさ」が合うかどうかです。<strong>「きっちり派(P)」</strong>同士、または<strong>「自由奔放派(F)」</strong>同士なら、言葉にしなくても阿吽の呼吸で生活できます。<br>
+                                ここは<strong>「自分と同じタイプ」の方が、ストレスなく過ごせます。</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; padding:15px; background:rgba(41, 128, 185, 0.05); border-radius:8px; width:100%; box-sizing:border-box; border:1px dashed rgba(41, 128, 185, 0.3);">
+                        <p style="font-size:0.8rem; color:#2980b9; font-weight:bold; margin:0 0 5px 0;">⚠️ 合わない場合 (違う価値観)</p>
+                        <p style="font-size:0.8rem; color:#666; margin:0; line-height:1.5;">
+                            PにとってFは「だらしない人」、FにとってPは「息苦しい人」に見えます。<br>
+                            毎日の生活習慣（掃除や時間厳守など）が、小さなストレスとして積み重なります。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="law-card rank-3" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <img src="assets/images/law_spice.jpg" class="law-img" alt="感性の相違">
+                        <div class="law-content">
+                            <h4>3. スパイスの法則：感性の相違 <span style="font-size:0.8em; font-weight:normal; color:#8e44ad;">(Style)</span></h4>
+                            <p>
+                                自分にない感性は、二人の世界を広げるスパイスになります。<strong>「我が道を行く(O)」</strong>タイプと<strong>「空気を読む(C)」</strong>タイプのペアは、お互いの視点の違いが新鮮な刺激になります。<br>
+                                ここは<strong>「違うタイプ」の方が、マンネリせず楽しめます。</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; padding:15px; background:rgba(142, 68, 173, 0.05); border-radius:8px; width:100%; box-sizing:border-box; border:1px dashed rgba(142, 68, 173, 0.3);">
+                        <p style="font-size:0.8rem; color:#8e44ad; font-weight:bold; margin:0 0 5px 0;">⚠️ 合わない場合 (同じ感性)</p>
+                        <p style="font-size:0.8rem; color:#666; margin:0; line-height:1.5;">
+                            <strong>O同士：</strong>お互いに頑固で譲らず、一度対立すると冷戦状態が続きます。<br>
+                            <strong>C同士：</strong>平和ですが、お互いに遠慮しすぎて本音が言えず、表面的な関係になりがちです。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="law-card rank-4" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <img src="assets/images/law_direction.jpg" class="law-img" alt="志向の同調">
+                        <div class="law-content">
+                            <h4>4. 未来の法則：志向の同調 <span style="font-size:0.8em; font-weight:normal; color:#27ae60;">(Focus)</span></h4>
+                            <p>
+                                人生の歩む速度や、目指す方向が同じかどうかです。<strong>「もっと上へ(A)」</strong>と上昇志向の二人、あるいは<strong>「今のままで(N)」</strong>と安定志向の二人。<br>
+                                ここは<strong>「同じタイプ」の方が、長く一緒に歩んでいけます。</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; padding:15px; background:rgba(39, 174, 96, 0.05); border-radius:8px; width:100%; box-sizing:border-box; border:1px dashed rgba(39, 174, 96, 0.3);">
+                        <p style="font-size:0.8rem; color:#27ae60; font-weight:bold; margin:0 0 5px 0;">⚠️ 合わない場合 (違う志向)</p>
+                        <p style="font-size:0.8rem; color:#666; margin:0; line-height:1.5;">
+                            AはNを「向上心がない」と不満に思い、NはAを「生き急いでいる」と疲れを感じます。<br>
+                            長く付き合うほど、人生の歩幅が合わなくなっていきます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rpg-section-box" style="border:none; margin-bottom: 60px;">
+                <h3 class="rpg-sec-title" style="justify-content:center; border:none; text-align:center;">
+                    第4章：運命は変えられる
+                </h3>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                     <span style="font-family:serif; color:#8d6df9; letter-spacing: 2px; font-weight:bold; font-size: 1.2rem;">Epilogue</span>
+                     <img src="assets/images/deco_quill.jpg" style="width: 40px; vertical-align: middle; margin-left: 10px; transform: rotate(-15deg);" alt="">
+                </div>
+                
+                <div class="epilogue-paper">
+                    <p>
+                        この診断結果は、決してあなたの「生まれ持った運命」を固定するものではありません。<br>
+                        あくまで、これまでの人生であなたが選び取ってきた<strong>「後天的な行動特性」</strong>を映し出した鏡にすぎないのです。
+                    </p>
+                    <p>
+                        RPGでキャラクターがジョブチェンジして成長するように、あなたのタイプも、これからの行動や心がけ次第でいくらでも変えていくことができます。
+                    </p>
+                    <p>
+                        もし今のパートナーと相性が悪いと出ても、諦める必要はありません。<br>
+                        「相手はこういう特性なんだ」と理解し、あなたが接し方や役割を少し変えてみるだけで、関係は劇的に良くなります。<br>
+                        この診断を、自分を見つめ直し、大切な人との理想的な関係を築くための<strong>「冒険の地図」</strong>として活用していただければ幸いです。
+                    </p>
+                    
+                    <img src="assets/images/deco_seal.jpg" class="epilogue-seal" alt="封">
+                </div>
+            </div>
+
+            <div style="margin-top:50px; margin-bottom:30px;">
+                <button class="btn-primary" onclick="location.href='index.html'">酒場（トップ）に戻る</button>
+            </div>
+            
+            <p style="font-size: 0.75rem; color: #ccc; font-family: sans-serif;">
+                &copy; 2024 RPG Fantasy Diagnosis
+            </p>
+
+        </div>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+
+    <script>
+        // コピー機能
+        function copySiteUrl() {
+            const url = window.location.origin + window.location.pathname.replace('logic.html', '');
+            navigator.clipboard.writeText(url).then(() => {
+                const toast = document.getElementById('toast');
+                if(toast) {
+                    toast.classList.remove('hidden');
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        toast.classList.add('hidden');
+                    }, 2000);
+                } else {
+                    alert("リンクをコピーしました！");
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

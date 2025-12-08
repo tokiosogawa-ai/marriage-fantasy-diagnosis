@@ -35,31 +35,36 @@ const dom = {
 // 2. 初期化・イベントリスナー
 // =========================================
 
-// ★修正：ページ読み込み完了時に、確実にチェックを実行
+// ページ読み込み時にURLパラメータをチェック
+// =========================================
+// 2. 初期化・イベントリスナー
+// =========================================
+
 window.onload = function() {
-    // 1. URLからタイプを取得
+    // data.jsの読み込みチェック
+    if (typeof typesData === 'undefined') {
+        console.error("data.js not loaded.");
+        return;
+    }
+
     const params = new URLSearchParams(window.location.search);
     const typeParam = params.get('type');
+    const modeParam = params.get('mode'); // ★追加：モード判定用
 
-    // 2. タイプがあり、かつデータが存在する場合
+    // 診断結果パラメータがある場合のみ処理
     if (typeParam && typesData[typeParam]) {
-        console.log("診断結果パラメータを検出:", typeParam);
-
-        // 3. 少しだけ待ってから強制的に画面を切り替える
-        // (ローディング演出などをスキップして結果を出す)
         setTimeout(() => {
-            // ダミーのスコアを入れておく（グラフ表示などでエラーにならないように）
-            scores = { O:50, C:50, P:50, F:50, D:50, S:50, A:50, N:50 }; 
+            // エラー防止のためのダミーデータ
+            if(typeof scores === 'undefined') scores = { O:50, C:50, P:50, F:50, D:50, S:50, A:50, N:50 };
             
-            // 結果画面を表示
-            showResult(typeParam, false);
+            // ★修正：modeがcatalogなら、図鑑モード(true)として表示
+            const isCatalogMode = (modeParam === 'catalog');
             
-            // 画面の表示状態を強制上書き
-            switchScreen("result");
+            showResult(typeParam, isCatalogMode);
+            
+            // switchScreen関数があれば実行
+            if(typeof switchScreen === 'function') switchScreen("result");
         }, 100);
-    } else {
-        // パラメータがない場合はトップ画面を表示
-        switchScreen("top");
     }
 };
 
@@ -79,34 +84,37 @@ if(dom.backBtn) {
     dom.backBtn.addEventListener("click", prevQuestion);
 }
 
-// ④ メニュー制御 (妖精の表示切り替え追加版)
-document.getElementById("menu-btn").addEventListener("click", () => {
-    dom.navOverlay.classList.remove("hidden");
-    
-    // ★追加：メニューを開いたら妖精を隠す
-    const naviLayer = document.getElementById('question-navi-layer');
-    if (naviLayer) naviLayer.classList.add("hidden");
-});
+const menuBtn = document.getElementById("menu-btn");
+if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+        const nav = document.getElementById("nav-overlay");
+        if(nav) nav.classList.remove("hidden");
+        const naviLayer = document.getElementById('question-navi-layer');
+        if (naviLayer) naviLayer.classList.add("hidden");
+    });
+}
 
-document.getElementById("close-btn").addEventListener("click", () => {
-    dom.navOverlay.classList.add("hidden");
-    
-    // ★追加：メニューを閉じたら、今が「質問画面」なら妖精を復活させる
-    const naviLayer = document.getElementById('question-navi-layer');
-    const questionScreen = document.getElementById('screen-question');
-    
-    // 質問画面が表示中(active)なら、妖精のhiddenを外す
-    if (naviLayer && questionScreen.classList.contains('active')) {
-        naviLayer.classList.remove("hidden");
-    }
-});
+const closeBtn = document.getElementById("close-btn");
+if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+        const nav = document.getElementById("nav-overlay");
+        if(nav) nav.classList.add("hidden");
+        
+        const naviLayer = document.getElementById('question-navi-layer');
+        const questionScreen = document.getElementById('screen-question');
+        if (naviLayer && questionScreen && questionScreen.classList.contains('active')) {
+            naviLayer.classList.remove("hidden");
+        }
+    });
+}
 
 const catalogBtn = document.getElementById("menu-catalog-btn");
 if (catalogBtn) {
     catalogBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        dom.navOverlay.classList.add("hidden");
-        showResult("OPDA", true); // 図鑑モード
+        const nav = document.getElementById("nav-overlay");
+        if(nav) nav.classList.add("hidden");
+        showResult("OPDA", true); 
     });
 }
 
@@ -140,7 +148,6 @@ function backToTop() {
 }
 
 function switchScreen(screenName) {
-    // 画面切り替え
     Object.keys(screens).forEach(key => {
         if (key === screenName) return;
         screens[key].classList.remove("active");
@@ -150,30 +157,22 @@ function switchScreen(screenName) {
     target.classList.remove("hidden");
     setTimeout(() => { target.classList.add("active"); }, 50);
     
-    // --- ★ここを追加：キャラの出し分け制御 ---
-
-    // 1. 結果画面のキャラ（勇者など）
+    // キャラの出し分け
     const floatLayer = document.getElementById('floating-char-layer');
     if (floatLayer) {
-        if (screenName === 'result') {
-            // showResult側で制御するのでここでは何もしない（消さない）
-        } else {
-            floatLayer.classList.add('hidden');
-        }
+        if (screenName === 'result') { /* showResultで制御 */ }
+        else { floatLayer.classList.add('hidden'); }
     }
 
-    // 2. 質問画面の妖精
     const naviLayer = document.getElementById('question-navi-layer');
     if (naviLayer) {
-        if (screenName === 'question') {
-            naviLayer.classList.remove('hidden'); // 質問中は表示
-        } else {
-            naviLayer.classList.add('hidden');    // それ以外は隠す
-        }
+        if (screenName === 'question') { naviLayer.classList.remove('hidden'); }
+        else { naviLayer.classList.add('hidden'); }
     }
 }
 
 function updateQuestionView() {
+    // data.jsのquestionsを使う
     const q = questions[currentQuestionIndex];
     dom.questionText.innerText = `Q${currentQuestionIndex + 1}. ${q.text}`;
     dom.currentNum.innerText = currentQuestionIndex + 1;
@@ -184,36 +183,25 @@ function updateQuestionView() {
 
     dom.backBtn.style.display = (currentQuestionIndex === 0) ? "none" : "inline-block";
 
-    // ★修正：セリフを「ワクワク系」に変更
+    // 妖精のセリフ更新
     const fukidashi = document.querySelector('.navi-fukidashi');
     if (fukidashi) {
         let msg = "";
         const current = currentQuestionIndex + 1;
         const total = questions.length;
 
-        // 進捗に応じたつぶやき
-        if (current === 1) {
-            msg = "直感で答えてみてね！";
-        } else if (current === 10) {
-            msg = "どんなタイプになるのかな？"; // ★変更
-        } else if (current === 20) {
-            msg = "運命の人が見つかるかも…！"; // ★変更
-        } else if (current === 30) {
-            msg = "折り返し地点だよ！";
-        } else if (current === 40) {
-            msg = "あなたの性格が見えてきたよ"; // ★変更
-        } else if (current === 50) {
-            msg = "ラストスパート！！";
-        } else if (current === total) {
-            msg = "最後の質問だよ！";
-        }
+        if (current === 1) msg = "直感で答えてね！";
+        else if (current === 10) msg = "どんなタイプになるのかな？";
+        else if (current === 20) msg = "運命の人が見つかるかも…！";
+        else if (current === 30) msg = "折り返し地点だよ！";
+        else if (current === 40) msg = "あなたの性格が見えてきたよ";
+        else if (current === 50) msg = "ラストスパート！！";
+        else if (current === total) msg = "最後の質問だよ！";
 
-        // メッセージがある時だけ更新（毎回コロコロ変えない）
         if (msg) {
             fukidashi.textContent = msg;
-            // ポンッと跳ねるアニメーション
             fukidashi.style.animation = 'none';
-            fukidashi.offsetHeight; /* リフロー */
+            fukidashi.offsetHeight;
             fukidashi.style.animation = 'pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
         }
     }
@@ -230,8 +218,8 @@ function registerAnswer(value) {
     dom.questionCard.classList.add("fade-out-left");
 
     setTimeout(() => {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
             updateQuestionView();
             dom.questionCard.classList.remove("fade-out-left");
             dom.questionCard.classList.add("fade-in-right");
@@ -239,9 +227,9 @@ function registerAnswer(value) {
                 dom.questionCard.classList.remove("fade-in-right");
                 isNavigating = false;
             }, 50);
-    } else {
-        finishDiagnosis();
-    }
+        } else {
+            finishDiagnosis();
+        }
     }, ANIMATION_DURATION);
 }
 
@@ -293,19 +281,19 @@ function sendToGoogleSheets(resultType) {
 function finishDiagnosis() {
     switchScreen("loading");
     try {
-    const type = calculateType();
+        const type = calculateType();
         setTimeout(() => { saveHistoryLocal(type); sendToGoogleSheets(type); }, 0);
-    
-    let step = 0;
-    const loadingText = document.getElementById("loading-text");
-    const interval = setInterval(() => {
-        step++;
+
+        let step = 0;
+        const loadingText = document.getElementById("loading-text");
+        const interval = setInterval(() => {
+            step++;
             if(step === 1 && loadingText) loadingText.innerText = "運命の相手を探しています...";
-        if(step === 2) {
-            clearInterval(interval);
+            if(step === 2) {
+                clearInterval(interval);
                 showResult(type, false); 
-        }
-    }, 1500);
+            }
+        }, 1500);
     } catch (e) {
         showResult("OPDA", false); // Fallback
     }
@@ -317,7 +305,6 @@ function calculateType() {
     result += (scores.P >= scores.F) ? "P" : "F";
     result += (scores.D >= scores.S) ? "D" : "S";
     result += (scores.A >= scores.N) ? "A" : "N";
-    // data.jsのtypesDataを使用
     return typesData[result] ? result : "OPDA"; 
 }
 
@@ -336,38 +323,28 @@ function showResult(typeKey, isCatalog = false) {
     const grandClassKey = typeKey.substring(2, 4);
     const grandClass = grandClasses[grandClassKey];
 
-    // ★追加：ボディのクラスをリセットして、新しいテーマクラスを付与
-    document.body.className = ''; // 一旦リセット
-    // grandClass.id には "brave", "ruler" などが入っています
+    // テーマカラー
+    document.body.className = '';
     document.body.classList.add(`theme-${grandClass.id}`);
 
-    // ① ヘッダー情報の注入
-    // ★変更：名前の横にタイプコード（OPDAなど）を小さく追加
+    // ヘッダー情報
     const nameEl = document.getElementById('res-name');
     nameEl.innerHTML = `${baseData.name} <span class="type-code-label">(${typeKey})</span>`;
     
     setText('res-catch', baseData.catch);
-    
     setText('res-intro', baseData.desc);
     setText('res-grand-class', grandClass.name.split(" ")[1]);
 
-    // --- ★追加：THE STORYの色をクラスカラーに合わせて変更 ---
+    // THE STORYの色
     const introBox = document.querySelector('.rpg-intro-box');
     const introIcon = document.querySelector('.intro-icon');
-
     if (introBox && introIcon) {
-        // 1. 箱の上の線をクラスカラーにする
         introBox.style.borderTopColor = grandClass.color;
-        
-        // 2. アイコンの背景色をクラスカラーにする
         introIcon.style.backgroundColor = grandClass.color;
-        
-        // 3. アイコンの影の色も合わせて調整（少し透明にする）
-        introIcon.style.boxShadow = `0 4px 10px ${grandClass.color}66`; // 末尾の66は透明度40%
+        introIcon.style.boxShadow = `0 4px 10px ${grandClass.color}66`;
     }
-    // --- ★追加ここまで ---
     
-    // 画像表示処理（修正版）
+    // 画像表示
     const charImg = document.getElementById('res-char-img');
     if (baseData.imageFile) {
         charImg.src = `assets/images/${baseData.imageFile}`;
@@ -377,14 +354,20 @@ function showResult(typeKey, isCatalog = false) {
         charImg.style.display = 'none';
     }
 
-    // 背景画像処理（キャラがいても背景は消さない）
+    // 背景画像
     const headerBg = document.getElementById('rpg-header-bg');
     if(headerBg) {
+        // スタイルリセット
+        headerBg.style.background = ''; 
+        headerBg.style.backgroundImage = '';
+
         if (baseData.bgImage) {
-            headerBg.style.backgroundImage = `url('assets/images/${baseData.bgImage}')`;
+            const grad = `linear-gradient(135deg, rgba(45, 52, 54, 0.4), rgba(45, 52, 54, 0.4))`;
+            const img = `url('assets/images/${baseData.bgImage}')`;
+            headerBg.style.backgroundImage = `${grad}, ${img}`;
             headerBg.style.backgroundSize = 'cover';
             headerBg.style.backgroundPosition = 'center';
-            headerBg.style.boxShadow = "inset 0 0 0 2000px rgba(0, 0, 0, 0.3)";
+            headerBg.style.boxShadow = "none";
         } else {
             headerBg.style.background = `linear-gradient(135deg, #2d3436, ${grandClass.color})`;
             headerBg.style.boxShadow = "none";
@@ -392,29 +375,24 @@ function showResult(typeKey, isCatalog = false) {
         headerBg.style.borderColor = grandClass.color;
     }
 
-    // ② ステータスチャート
+    // ステータス（透かし画像付き）
     const statusContainer = document.getElementById('res-status-list');
-    
-    // ★追加：背景用の画像タグを作成（既存の中身をリセットした直後に入れる）
     let bgImgHtml = '';
     if (baseData.imageFile) {
         bgImgHtml = `<img src="assets/images/${baseData.imageFile}" class="status-bg-chara" alt="">`;
     }
-    
-    // コンテナの中身を生成（背景画像 + リスト）
-    statusContainer.innerHTML = bgImgHtml; 
+    statusContainer.innerHTML = bgImgHtml;
     
     rpgData.stats.forEach(stat => {
         const row = document.createElement('div');
         row.className = 'status-row';
         const stars = '<span class="stat-stars">' + '★'.repeat(stat.val) + '</span>' + 
                       '<span class="stat-stars" style="color:#e0e0e0">' + '★'.repeat(5 - stat.val) + '</span>';
-        const descText = stat.desc ? stat.desc : "";
-        row.innerHTML = `<div class="stat-main"><span class="stat-label">${stat.label}</span>${stars}</div><p class="stat-desc-text">${descText}</p>`;
+        row.innerHTML = `<div class="stat-main"><span class="stat-label">${stat.label}</span>${stars}</div><p class="stat-desc-text">${stat.desc}</p>`;
         statusContainer.appendChild(row);
     });
 
-    // グラフ制御
+    // グラフ
     const chartSection = document.getElementById('chart-section');
     if (chartSection) {
         if (isCatalog) {
@@ -442,47 +420,33 @@ function showResult(typeKey, isCatalog = false) {
         setText('res-loot-text', lootRaw);
     }
 
-    // ④ 攻略ガイド
-    // 名前を取得（例：「勇者」）
+    // 攻略ガイド（動的タイトル）
     const jobName = baseData.name;
-
-    // 1. レベルアップ・クエスト
     if (baseData.quests) {
         const questHtml = baseData.quests.map(q => 
             `<div class="quest-unit"><span class="quest-title">『${q.name}』</span><p class="quest-body">${q.desc}</p></div>`
         ).join('');
         setHtml('res-guide-levelup', questHtml);
-        // ★追加：説明文の書き換え
         document.querySelector('.card-blue .card-desc').textContent = `${jobName}のあなたがさらに魅力的になるための、成長ミッション`;
-    } else {
-        setHtml('res-guide-levelup', "（調査中）");
     }
     
     const manual = baseData.manual || {};
-    
-    // 2. LINE攻略
     setHtml('res-guide-line', formatList(manual.line));
-    // ★追加：説明文の書き換え
     document.querySelector('.card-green .card-desc').textContent = `${jobName}の心を掴むための、連絡の頻度とコツ`;
 
-    // 3. デート戦略
     setHtml('res-guide-date', formatList(manual.date));
-    // ★追加：説明文の書き換え
     document.querySelector('.card-pink .card-desc').textContent = `${jobName}との距離がグッと縮まる、推奨シチュエーション`;
 
-    // 4. 取扱説明書
     setHtml('res-guide-woo',  formatList(manual.attention));
-    // ★追加：説明文の書き換え
     document.querySelector('.card-secret .card-desc').textContent = `${jobName}を落とす殺し文句と、絶対に踏んではいけない地雷`;
 
-    // ⑤ 異界の英雄
+
+    // 英雄リスト
     const soulContainer = document.getElementById('res-soul-tags');
     soulContainer.innerHTML = '';
     if (baseData.celebs) {
         baseData.celebs.forEach(c => {
             const div = document.createElement('div');
-            
-            // カテゴリ判定ロジック
             let categoryClass = 'tag-default';
             if (c.type && c.type.includes('男')) categoryClass = 'tag-male';
             else if (c.type && c.type.includes('女')) categoryClass = 'tag-female';
@@ -491,16 +455,12 @@ function showResult(typeKey, isCatalog = false) {
             else if (c.type && (c.type.includes('芸人') || c.type.includes('文化人') || c.type.includes('論破'))) categoryClass = 'tag-fun';
 
             div.className = `celeb-tag ${categoryClass}`;
-            
-            const name = typeof c === 'string' ? c : c.name;
-            const typeLabel = typeof c === 'string' ? 'HERO' : c.type;
-            
-            div.innerHTML = `<span class="type">${typeLabel}</span><span class="name">${name}</span>`;
+            div.innerHTML = `<span class="type">${c.type}</span><span class="name">${c.name}</span>`;
             soulContainer.appendChild(div);
         });
     }
 
-    // シミュレーターリセット
+    // シミュレーター
     document.getElementById('sim-result-card').classList.add('hidden');
     document.getElementById('sim-default-view').classList.remove('hidden');
     const simSelect = document.getElementById('sim-selector');
@@ -510,16 +470,12 @@ function showResult(typeKey, isCatalog = false) {
     // フッター
     renderFooterCatalog();
 
-    // ★追加：常駐キャラクターの表示設定
+    // 常駐キャラ
     const floatLayer = document.getElementById('floating-char-layer');
     const floatImg = document.getElementById('floating-char-img');
-
     if (baseData.imageFile) {
         floatImg.src = `assets/images/${baseData.imageFile}`;
-        // 画像読み込み完了後に表示（チラつき防止）
-        floatImg.onload = () => {
-            floatLayer.classList.remove('hidden');
-        };
+        floatImg.onload = () => { floatLayer.classList.remove('hidden'); };
     } else {
         floatLayer.classList.add('hidden');
     }
@@ -536,7 +492,6 @@ function showResult(typeKey, isCatalog = false) {
     }, 100);
 }
 
-// チャート描画
 function renderChart() {
     const axes = [
         { left: "O", right: "C", leftLabel: "独創性 (O)", rightLabel: "協調性 (C)" },
@@ -560,37 +515,24 @@ function renderChart() {
     if(container) container.innerHTML = chartHTML;
 }
 
-// =========================================
-// シェア機能 (RPG風テキスト修正版)
-// =========================================
-
 function getBaseUrl() { return window.location.origin + window.location.pathname; }
 
-// X (Twitter) シェア
 function shareTwitter() {
     const name = document.getElementById('res-name').textContent;
     const type = document.getElementById('res-grand-class').textContent;
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
-    
-    // ★修正：タイトルとハッシュタグを変更
     const text = `私の【RPG風ファンタジー診断】結果は…\n🛡️ 職業：${name}（${type}）でした！\n\n運命のパートナーや攻略法も判明！？\n⚔️ あなたも冒険に出る👇\n#RPG風ファンタジー診断\n`;
-    
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
 }
 
-// LINE シェア
 function shareLine() {
     const name = document.getElementById('res-name').textContent;
     const type = document.getElementById('res-grand-class').textContent;
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
-
-    // ★修正：LINE用のテキスト（URL込み）
     const text = `【RPG風ファンタジー診断】\n私の職業は…\n🛡️ ${name}（${type}）でした！\n\n運命のパートナーや、取扱説明書も判明！？\n⚔️ あなたも診断してみる？\n\n▼診断はこちら\n${shareUrl}`;
-    
     window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-// URLコピー（変更なし、念のため掲載）
 function copyToClipboard() {
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
     navigator.clipboard.writeText(shareUrl).then(() => {
@@ -602,7 +544,6 @@ function copyToClipboard() {
     });
 }
 
-// ヘルパー関数
 function setText(id, text) { const el = document.getElementById(id); if(el) el.textContent = text; }
 function setHtml(id, html) { const el = document.getElementById(id); if(el) el.innerHTML = html; }
 function formatList(list) {
@@ -627,7 +568,6 @@ function formatList(list) {
     return list;
 }
 
-// シミュレーター
 function initPartySimulator(myTypeCode) {
     const myData = typesData[myTypeCode];
     const relationships = myData.relationships;
@@ -688,7 +628,6 @@ function createListItem(container, rel, rankLabel, myName, isWorst) {
     container.appendChild(div);
 }
 
-// シミュレーター更新処理 (修正版)
 function updateSimulator(myCode, targetCode) {
     if (!targetCode) {
         document.getElementById('sim-default-view').classList.remove('hidden');
@@ -700,37 +639,28 @@ function updateSimulator(myCode, targetCode) {
     const targetData = typesData[targetCode];
     const rel = myData.relationships.find(r => r.target === targetCode);
     
-    // ランク情報の取得
     const rankMark = rel ? rel.rank : "-";
     const rankInfo = getRankDetail(rankMark);
     
-    // ★セット効果名 (effect) を正しく取得して表示
-    // データ内に `effect` があればそれを使い、なければデフォルト文言
     const effectTitle = rel && rel.effect ? `『${rel.effect}』` : `【${myData.name}】×【${targetData.name}】`;
+    const effectName = rel && rel.effect ? rel.effect : `連携技：クロス・${targetData.name}`;
     
-    // 説明文 (desc)
     const descText = rel ? rel.desc : "データがありません。";
     const buffs = rel ? rel.buffs : [];
 
-    // 画面切り替え
     document.getElementById('sim-default-view').classList.add('hidden');
     const card = document.getElementById('sim-result-card');
     card.classList.remove('hidden');
     
-    // 要素へのセット
     document.getElementById('sim-my-name').textContent = myData.name;
     document.getElementById('sim-target-name').textContent = targetData.name;
     document.getElementById('sim-rank-value').textContent = rankInfo.char;
     document.getElementById('sim-rank-desc').textContent = rankInfo.label;
     document.getElementById('sim-rank-value').style.color = rankInfo.color;
 
-    // ★セット効果名を表示するIDを "sim-effect-title" に統一
     setText('sim-effect-title', effectTitle);     
-    
-    // 詳細テキスト
     setText('sim-desc-text', descText);
 
-    // バフリスト生成
     const buffsContainer = document.getElementById('sim-buffs-list');
     buffsContainer.innerHTML = '';
     if (buffs.length > 0) {
@@ -744,7 +674,6 @@ function updateSimulator(myCode, targetCode) {
         buffsContainer.innerHTML = '<div class="buff-item">データ収集中...</div>';
     }
 
-    // スクロール
     setTimeout(() => {
         card.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
@@ -814,4 +743,24 @@ function renderFooterCatalog() {
         groupDiv.appendChild(gridDiv);
         container.appendChild(groupDiv);
     });
+}
+
+// =========================================
+// 過去の診断結果を呼び出す機能
+// =========================================
+function showSavedResult() {
+    try {
+        const lastResult = localStorage.getItem('fantasy_last_result');
+        if (lastResult) {
+            const data = JSON.parse(lastResult);
+            if (data.type && typesData[data.type]) {
+                showResult(data.type, false);
+                return;
+            }
+        }
+        alert("保存された診断データが見つかりませんでした。\nまずは「診断を始める」から冒険に出かけましょう！");
+    } catch (e) {
+        console.error("履歴読み込みエラー:", e);
+        alert("データの読み込みに失敗しました。");
+    }
 }

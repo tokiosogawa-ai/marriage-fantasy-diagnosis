@@ -39,7 +39,11 @@
         <ul class="nav-list">
             <li><a href="#" onclick="backToTop()">🏠 トップに戻る</a></li>
             <li><a href="javascript:void(0)" id="menu-catalog-btn">📖 職業図鑑を見る</a></li>
-            <li><a href="#" onclick="alert('リンクをコピーしました！')">🔗 シェアする</a></li>
+            <li><a href="logic.html">🔍 診断の仕組み</a></li> 
+            
+            <li><a href="#" onclick="copyToClipboard()">🔗 リンクをコピー</a></li>
+            
+            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSelTwy_FYW7Fm5LcI7Zv51n0xZ5gHDHYGqlZKNZ1fxWf66F9w/viewform?usp=publish-editor" target="_blank" class="nav-contact">📮 ご意見・感想はこちら</a></li>
         </ul>
     </nav>
 
@@ -51,9 +55,11 @@
                 <div class="overlay"></div>
                 <div class="content-front">
                     
-                    <div class="logo-wrapper">
-                        <h1 class="logo-text">パートナー診断</h1>
-                        <span class="badge-rpg">RPG風</span>
+                    <div class="logo-wrapper pixel-theme">
+                        <div class="pixel-frame">
+                            <span class="pixel-sub">RPG風</span>
+                            <h1 class="pixel-main">パートナー診断</h1>
+                        </div>
                     </div>
                     
                     <p class="hero-catch">
@@ -73,7 +79,9 @@
                     <button class="btn-primary pulse-anim start-trigger glow-btn">診断を始める 🔮</button>
                     
                     <div class="sub-links">
-                        <a href="#" onclick="alert('準備中')" class="text-white">▷ 診断済みの方はこちら</a>
+                        <a href="javascript:void(0)" onclick="showSavedResult()" class="text-white" style="text-decoration: underline; cursor: pointer;">
+                            ▷ 診断済みの方はこちら
+                        </a>
                     </div>
                 </div>
             </div>
@@ -245,8 +253,8 @@
                         </div>
                         <h2 class="rpg-job-title" id="res-name">勇者</h2>
                         <p class="rpg-job-catch" id="res-catch">規格外のスーパーヒーロー</p>
-                    </div>
-                    
+            </div>
+
                     <div class="rpg-char-img-area">
                         <img src="" id="res-char-img" class="rpg-char-img-file" alt="Character">
                     </div>
@@ -261,7 +269,7 @@
                     <div class="intro-text-wrapper">
                         <p id="res-intro">ここに説明文が入ります。</p>
                     </div>
-                </div>
+            </div>
 
                 <div class="rpg-section-box">
                     <h3 class="rpg-sec-title">📊 能力パラメータ</h3>
@@ -451,15 +459,15 @@
                             <p id="sim-desc-text" class="sim-desc-text">---</p>
 
                             <div id="sim-buffs-list" class="sim-buffs-list">
-                                </div>
-                        </div>
-                        
+                </div>
+            </div>
+
                         <button id="sim-reset-btn" class="btn-secondary full-width" style="margin-top:15px;">
                             🔄 閉じる
                         </button>
                     </div>
-                </div>
-
+            </div>
+            
                 <div class="action-area">
                     <p class="share-title">この結果をシェアする</p>
                     <div class="share-btns">
@@ -485,6 +493,12 @@
                 <div class="catalog-footer">
                     <p style="text-align:center; font-size:0.9rem; color:#888;">他のジョブも見てみる？</p>
                     <div id="type-list-container" class="type-grid"></div>
+                </div>
+
+                <div class="site-footer" style="margin-top: 60px; text-align: center; padding-bottom: 20px;">
+                    <p style="font-size: 0.75rem; color: #ccc; font-family: sans-serif;">
+                        &copy; 2024 RPG Fantasy Diagnosis
+                    </p>
                 </div>
 
             </div>
