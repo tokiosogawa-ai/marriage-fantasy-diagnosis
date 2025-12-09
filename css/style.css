@@ -374,11 +374,35 @@ button { font-family: inherit; }
 
 /* ステータスリスト */
 .status-grid { display: flex; flex-direction: column; gap: 15px; background: transparent; padding: 10px 0; }
+/* ステータスリスト (スマホ用修正) */
 .status-row {
-    display: flex; flex-direction: column; background: white; padding: 12px 15px;
-    border-radius: 8px; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    gap: 5px; /* 上下の間隔 */
 }
-.stat-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-weight: bold; font-size: 1rem; }
+
+.stat-main {
+    display: flex;
+    align-items: center;
+    /* ★変更：両端揃えをやめて左詰めにし、間隔を固定する */
+    justify-content: flex-start; 
+    gap: 15px; 
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.stat-label {
+    /* ★追加：ラベル幅を固定してガタつきを防ぐ */
+    width: 5em; 
+    flex-shrink: 0;
+}
+
 .stat-stars { color: #f1c40f; letter-spacing: 2px; font-size: 1.1rem; }
 .stat-desc-text { font-size: 0.85rem; color: #666; margin: 0; padding-top: 5px; border-top: 1px dashed #eee; }
 /* 透かしキャラ */
@@ -587,16 +611,34 @@ button { font-family: inherit; }
 /* ==========================================================================
    6. 妖精ナビゲーター & 浮遊キャラ
    ========================================================================== */
+/* --- 妖精ナビキャラクター (修正版) --- */
 .navi-character-area {
-    position: fixed; bottom: -20px; right: -30px; z-index: 2000;
-    display: flex; flex-direction: column; align-items: flex-end;
-    pointer-events: none; transition: opacity 0.3s;
+    position: fixed;
+    bottom: -10px;        /* 足元調整 */
+    right: -10px;         /* 右端調整 */
+    z-index: 2000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
-.navi-img { width: 340px; height: auto; filter: drop-shadow(0 4px 5px rgba(0,0,0,0.2)); animation: float-navi 4s ease-in-out infinite; }
+
+.navi-img {
+    /* ★変更：スマホでは小さくする */
+    width: 120px;         
+    height: auto;
+    filter: drop-shadow(0 4px 5px rgba(0,0,0,0.2));
+    animation: float-navi 4s ease-in-out infinite;
+}
 @keyframes float-navi { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* 吹き出し（スマホ用） */
 .navi-fukidashi {
     background: #fff; border: 3px solid var(--primary); color: var(--primary); font-size: 0.85rem; font-weight: bold; padding: 8px 15px; border-radius: 20px;
-    position: absolute; top: -85px; right: 55px; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.15); pointer-events: auto; animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: absolute;
+    top: -60px; /* 位置微調整 */
+    right: 30px;
+    white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.15); pointer-events: auto; animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .navi-fukidashi::after {
     content: ''; position: absolute; bottom: -8px; right: 25px; border-width: 8px 8px 0 0; border-style: solid; border-color: var(--primary) transparent transparent transparent;
@@ -752,16 +794,31 @@ button { font-family: inherit; }
 
 /* スマホ調整 */
 @media (max-width: 768px) {
+    /* ★修正ポイント：
+       罫線ズレを防ぐため、PCと同じ「行間」と「開始位置(padding-top)」を使います。
+       無理にスマホ用に縮めないのがコツです。
+    */
     .epilogue-paper {
-        padding: 30px 20px 50px 20px;
-        background-size: 100% 2.2rem; /* スマホは少し狭く */
+        /* 上の余白(40px)をPCと揃えることで、書き出し位置を合わせる */
+        padding: 40px 20px 50px 20px; 
+        
+        /* 背景サイズ(罫線の幅)もPCと同じ(2.4rem)に戻す（継承させるため記述しない） */
+        /* background-size: 100% 2.2rem;  <-- これを削除 */
     }
+    
     .epilogue-paper p {
-        font-size: 0.9rem;
-        line-height: 2.2rem; /* スマホの罫線に合わせる */
-        margin-bottom: 2.2rem;
+        font-size: 0.9rem; /* 文字サイズだけ少し小さく */
+        
+        /* 行の高さもPCと同じ(2.4rem)に戻して、罫線と合わせる */
+        line-height: 2.4rem; 
+        margin-bottom: 2.4rem;
     }
-    .epilogue-seal { width: 80px; bottom: -15px; right: -5px; }
+    
+    .epilogue-seal {
+        width: 80px;
+        bottom: -15px;
+        right: -5px;
+    }
 }
 
 /* ==========================================================================
@@ -788,10 +845,22 @@ button { font-family: inherit; }
     .logic-header-img-container { height: 250px; }
 }
 
+/* --- PC画面での調整 --- */
 @media (min-width: 1000px) {
-    /* Fairy */
-    .navi-character-area { width: 140px; right: calc(50% - 650px); bottom: 50px; }
-    .navi-fukidashi { top: -95px; right: 75px; font-size: 1.1rem; padding: 12px 20px; }
+    .navi-character-area {
+        right: calc(50% - 650px);
+        bottom: 50px;
+    }
+    
+    .navi-img {
+        /* ★変更：PCでは大きく戻す */
+        width: 340px; 
+    }
+
+    .navi-fukidashi {
+        top: -95px;
+        right: 75px;
+    }
 }
 
 /* =========================================
