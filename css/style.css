@@ -302,7 +302,12 @@ button { font-family: inherit; }
     background-size: cover !important; background-position: center !important;
     background-repeat: no-repeat !important; transition: none !important;
 }
-.rpg-header-card:hover { background-image: inherit !important; transform: none !important; }
+/* ★修正後（これで上書きしてください） */
+.rpg-header-card:hover {
+    /* 背景画像の設定を削除（JSのインラインスタイルを優先させるため） */
+    transform: none !important; /* 動きだけ止める */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important; /* 影も固定 */
+}
 
 .rpg-header-content {
     display: flex; justify-content: space-between; align-items: center;
