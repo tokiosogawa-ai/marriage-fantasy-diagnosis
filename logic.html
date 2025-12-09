@@ -347,12 +347,13 @@
     <script src="js/script.js"></script>
 
     <script>
-        // コピー機能 (修正版)
+        // コピー機能（ロジックページ用）
         function copySiteUrl() {
-            const url = window.location.origin + window.location.pathname.replace('logic.html', '');
+            // ★修正：加工せずに現在のURL（.../logic.html）をそのまま取得
+            const url = window.location.href;
             
             navigator.clipboard.writeText(url).then(() => {
-                // ★追加：メニューが開いていたら閉じる
+                // メニューが開いていたら閉じる
                 const nav = document.getElementById('nav-overlay');
                 if (nav && !nav.classList.contains('hidden')) {
                     nav.classList.add('hidden');

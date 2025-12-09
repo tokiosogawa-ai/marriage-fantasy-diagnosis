@@ -539,8 +539,16 @@ function shareLine() {
     window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
+// URLコピー機能（画面に応じたURL生成）
 function copyToClipboard() {
-    const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
+    let shareUrl = getBaseUrl(); // 基本のURL（トップページ）
+
+    // ★修正：現在「結果画面」が表示されている場合のみ、パラメータを付ける
+    const resultScreen = document.getElementById('screen-result');
+    if (resultScreen && resultScreen.classList.contains('active') && currentResultType) {
+        shareUrl += `?type=${currentResultType}`;
+    }
+
     navigator.clipboard.writeText(shareUrl).then(() => {
         const toast = document.getElementById('toast');
         if(toast) {
