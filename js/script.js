@@ -253,10 +253,16 @@ function getUserId() {
     } catch (e) { return "guest_user"; }
 }
 
+// 履歴保存（スコアも追加）
 function saveHistoryLocal(typeKey) {
     try {
         const userId = getUserId();
-        const historyData = { userId: userId, type: typeKey, timestamp: new Date().toISOString() };
+        const historyData = { 
+            userId: userId, 
+            type: typeKey, 
+            timestamp: new Date().toISOString(),
+            scores: scores // ★追加：スコアも保存する！
+        };
         localStorage.setItem('fantasy_last_result', JSON.stringify(historyData));
     } catch (e) {}
 }
@@ -748,17 +754,30 @@ function renderFooterCatalog() {
 // =========================================
 // 過去の診断結果を呼び出す機能
 // =========================================
+// 過去の診断結果を呼び出す機能 (修正版)
 function showSavedResult() {
     try {
         const lastResult = localStorage.getItem('fantasy_last_result');
         if (lastResult) {
             const data = JSON.parse(lastResult);
+            
             if (data.type && typesData[data.type]) {
-                showResult(data.type, false);
+                // ★修正：スコアデータがあるかチェック
+                if (data.scores) {
+                    // スコアがある場合（最新版）→ グラフを表示
+                    scores = data.scores; // 保存されたスコアを復元
+                    showResult(data.type, false); // false = 通常モード（グラフあり）
+                } else {
+                    // スコアがない場合（過去データ）→ グラフを隠す（図鑑モード）
+                    // true を渡すとグラフが非表示になります
+                    showResult(data.type, true); 
+                }
                 return;
             }
         }
+        
         alert("保存された診断データが見つかりませんでした。\nまずは「診断を始める」から冒険に出かけましょう！");
+        
     } catch (e) {
         console.error("履歴読み込みエラー:", e);
         alert("データの読み込みに失敗しました。");

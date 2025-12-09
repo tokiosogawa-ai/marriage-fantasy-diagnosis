@@ -372,39 +372,105 @@ button { font-family: inherit; }
     margin: 0; font-size: 1.05rem; line-height: 2; color: #444; font-weight: 500; letter-spacing: 0.05em;
 }
 
-/* ステータスリスト */
-.status-grid { display: flex; flex-direction: column; gap: 15px; background: transparent; padding: 10px 0; }
-/* ステータスリスト (スマホ用修正) */
-.status-row {
+/* =========================================
+   Status List (Mobile First Optimized)
+========================================= */
+
+.status-grid {
     display: flex;
     flex-direction: column;
+    gap: 15px;
+    background: transparent;
+    padding: 10px 0;
+}
+
+/* --- スマホ（基本）のスタイル --- */
+.status-row {
+    display: flex;
+    flex-direction: column; /* スマホは縦に積む */
     background: white;
-    padding: 12px 15px;
+    padding: 15px;
     border-radius: 8px;
     border: 1px solid #e0e0e0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    gap: 5px; /* 上下の間隔 */
+    gap: 8px; /* 上下の間隔 */
 }
 
+/* 上段：項目名と星を横並びに */
 .stat-main {
     display: flex;
-    align-items: center;
-    /* ★変更：両端揃えをやめて左詰めにし、間隔を固定する */
-    justify-content: flex-start; 
-    gap: 15px; 
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 1rem;
+    align-items: center;     /* ★高さ中央揃え */
+    justify-content: flex-start; /* ★左詰めで開始 */
+    width: 100%;
+    margin-bottom: 0;
 }
 
 .stat-label {
-    /* ★追加：ラベル幅を固定してガタつきを防ぐ */
-    width: 5em; 
-    flex-shrink: 0;
+    font-weight: bold;
+    color: #333;
+    font-size: 0.95rem;
+    text-align: left;
+    /* ★重要：ラベルの右側に余白を自動で入れて、星を右端に追いやる */
+    margin-right: auto; 
 }
 
-.stat-stars { color: #f1c40f; letter-spacing: 2px; font-size: 1.1rem; }
-.stat-desc-text { font-size: 0.85rem; color: #666; margin: 0; padding-top: 5px; border-top: 1px dashed #eee; }
+.stat-stars {
+    color: #f1c40f;
+    letter-spacing: 1px;
+    font-size: 1.2rem;
+    line-height: 1; /* ★高さを文字に合わせる */
+    white-space: nowrap;
+    
+    /* 星同士の隙間をなくす */
+    margin-left: 0; 
+    display: inline-flex; /* 高さを揃えるため */
+    align-items: center;
+}
+
+/* 下段：説明文 */
+.stat-desc-text {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+    padding-top: 5px;
+    border-top: 1px dashed #eee;
+    line-height: 1.5;
+    text-align: left;
+    width: 100%;
+}
+
+/* --- PC・タブレット（768px以上）のスタイル --- */
+@media (min-width: 768px) {
+    .status-row {
+        flex-direction: row;        /* PCは横並び */
+        align-items: center;        /* ★PCも中央揃えに変更 */
+        justify-content: flex-start;
+        gap: 30px;
+        padding: 12px 25px;
+    }
+
+    .stat-main {
+        flex: 0 0 230px;            /* 左側の幅を固定 */
+        justify-content: flex-start; 
+        gap: 0; /* 隙間なし（margin-right: autoで制御） */
+        border-right: 2px dotted #ddd;
+        padding-right: 20px;
+        margin-bottom: 0;
+    }
+    
+    .stat-label {
+        width: 100px;
+        margin-right: auto; /* PCでも星を右側に寄せる */
+    }
+
+    .stat-desc-text {
+        flex: 1;
+        border-top: none;
+        padding-top: 0;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+}
 /* 透かしキャラ */
 #res-status-list { position: relative; overflow: hidden; z-index: 1; }
 .status-bg-chara {
@@ -830,9 +896,6 @@ button { font-family: inherit; }
     .logo-text { font-size: 4rem; } .badge-rpg { font-size: 1.1rem; margin-top: -50px; }
 
     /* Result Page */
-    .status-row { flex-direction: row; align-items: baseline; justify-content: flex-start; gap: 30px; padding: 12px 25px; }
-    .stat-main { flex: 0 0 230px; margin-bottom: 0; border-right: 2px dotted #ddd; padding-right: 20px; align-items: baseline; }
-    .stat-desc-text { flex: 1; max-width: none; border-left: none; padding-left: 0; padding-top: 0; text-align: left; font-size: 0.9rem; line-height: 1.6; margin: 0; white-space: normal; padding-right: 10px; position: relative; top: -1px; }
     .card-content { padding: 16px 20px; } .card { max-width: 100%; } .sim-best-item, .sim-worst-item { padding: 12px 16px; }
     .card-text { padding-right: 10px; max-width: 100%; }
     .rpg-card.quest-slide { flex: 0 0 45%; }
@@ -885,23 +948,7 @@ button { font-family: inherit; }
 }
 
 /* --- 3. 能力パラメータ（星の整列） --- */
-.stat-main {
-    justify-content: flex-start; /* 左詰めに変更 */
-    gap: 0; /* 隙間はpaddingで調整 */
-}
-
-.stat-label {
-    width: 100px; /* ★幅を固定して縦のラインを揃える */
-    flex-shrink: 0;
-    text-align: left;
-}
-
-.stat-stars {
-    letter-spacing: 0; /* ★星の隙間をなくす */
-    font-size: 1.2rem;
-    line-height: 1;
-    margin-left: 10px; /* ラベルとの間隔 */
-}
+/* （Status List (Mobile First Optimized) に統合されました） */
 
 /* --- 4. 攻略ガイドの説明文 --- */
 .card-desc {
@@ -929,25 +976,7 @@ button { font-family: inherit; }
 }
 
 /* --- 2. 能力パラメータの修正 --- */
-.stat-main {
-    /* 左側のタイトルエリア */
-    flex: 0 0 230px; 
-    justify-content: space-between; /* 両端揃えをやめて */
-    padding-right: 20px;
-}
-
-.stat-label {
-    width: 80px;      /* 幅を固定 */
-    text-align: center; /* ★修正：文字を中央揃え */
-    flex-shrink: 0;
-}
-
-.stat-stars {
-    letter-spacing: -2px; /* ★修正：星の隙間を詰める（マイナス値で調整） */
-    font-size: 1.3rem;    /* 少し大きく */
-    display: inline-block;
-    margin-left: 10px;
-}
+/* （Status List (Mobile First Optimized) に統合されました） */
 
 /* --- 3. コピー完了トーストの見た目強化 --- */
 #toast {
