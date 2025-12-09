@@ -32,10 +32,6 @@ const dom = {
 
 
 // =========================================
-// 2. 初期化・イベントリスナー
-// =========================================
-
-// ページ読み込み時にURLパラメータをチェック
 // =========================================
 // 2. 初期化・イベントリスナー
 // =========================================
@@ -49,20 +45,24 @@ window.onload = function() {
 
     const params = new URLSearchParams(window.location.search);
     const typeParam = params.get('type');
-    const modeParam = params.get('mode'); // ★追加：モード判定用
+    const modeParam = params.get('mode');
 
     // 診断結果パラメータがある場合のみ処理
     if (typeParam && typesData[typeParam]) {
         setTimeout(() => {
-            // エラー防止のためのダミーデータ
-            if(typeof scores === 'undefined') scores = { O:50, C:50, P:50, F:50, D:50, S:50, A:50, N:50 };
+            // ★修正ポイント：
+            // URLから来た場合はスコアデータがないので、ダミーを入れてエラーを防ぎつつ、
+            // 第2引数を true (図鑑モード/グラフ非表示) にしてグラフを隠します。
             
-            // ★修正：modeがcatalogなら、図鑑モード(true)として表示
-            const isCatalogMode = (modeParam === 'catalog');
+            if(typeof scores === 'undefined') {
+                scores = { O:50, C:50, P:50, F:50, D:50, S:50, A:50, N:50 };
+            }
             
-            showResult(typeParam, isCatalogMode);
+            // 図鑑モード(catalog) または 通常のシェアリンクの場合もグラフを隠す
+            // (自分が診断直後でない限り、正確なグラフは出せないため)
+            showResult(typeParam, true); 
             
-            // switchScreen関数があれば実行
+            // 画面切り替え
             if(typeof switchScreen === 'function') switchScreen("result");
         }, 100);
     }
