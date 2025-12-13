@@ -523,19 +523,41 @@ function renderChart() {
 
 function getBaseUrl() { return window.location.origin + window.location.pathname; }
 
+// =========================================
+// シェア機能（修正版）
+// =========================================
+
+// Twitterシェア
 function shareTwitter() {
-    const name = document.getElementById('res-name').textContent;
-    const type = document.getElementById('res-grand-class').textContent;
-    const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
+    // 診断結果画面から名前とタイプを取得
+    const nameEl = document.getElementById('res-name');
+    const typeEl = document.getElementById('res-grand-class');
+    
+    // 要素がない場合（トップページなど）の対策
+    const name = nameEl ? nameEl.textContent : "冒険者";
+    const type = typeEl ? typeEl.textContent : "RPGジョブ";
+    
+    const shareUrl = `${getBaseUrl()}?type=${currentResultType || ""}`;
+    
+    // 文言を「パートナー診断」に統一
     const text = `私の【RPG風パートナー診断】結果は…\n🛡️ 職業：${name}（${type}）でした！\n\n運命のパートナーや攻略法も判明！？\n⚔️ あなたも冒険に出る👇\n#RPG風パートナー診断\n`;
+    
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
 }
 
+// LINEシェア
 function shareLine() {
-    const name = document.getElementById('res-name').textContent;
-    const type = document.getElementById('res-grand-class').textContent;
-    const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
+    const nameEl = document.getElementById('res-name');
+    const typeEl = document.getElementById('res-grand-class');
+    
+    const name = nameEl ? nameEl.textContent : "冒険者";
+    const type = typeEl ? typeEl.textContent : "RPGジョブ";
+    
+    const shareUrl = `${getBaseUrl()}?type=${currentResultType || ""}`;
+    
+    // 文言を「パートナー診断」に統一
     const text = `【RPG風パートナー診断】\n私の職業は…\n🛡️ ${name}（${type}）でした！\n\n運命のパートナーや、取扱説明書も判明！？\n⚔️ あなたも診断してみる？\n\n▼診断はこちら\n${shareUrl}`;
+    
     window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
