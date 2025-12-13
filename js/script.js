@@ -527,7 +527,7 @@ function shareTwitter() {
     const name = document.getElementById('res-name').textContent;
     const type = document.getElementById('res-grand-class').textContent;
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
-    const text = `私の【RPG風ファンタジー診断】結果は…\n🛡️ 職業：${name}（${type}）でした！\n\n運命のパートナーや攻略法も判明！？\n⚔️ あなたも冒険に出る👇\n#RPG風ファンタジー診断\n`;
+    const text = `私の【RPG風パートナー診断】結果は…\n🛡️ 職業：${name}（${type}）でした！\n\n運命のパートナーや攻略法も判明！？\n⚔️ あなたも冒険に出る👇\n#RPG風パートナー診断\n`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
 }
 
@@ -535,7 +535,7 @@ function shareLine() {
     const name = document.getElementById('res-name').textContent;
     const type = document.getElementById('res-grand-class').textContent;
     const shareUrl = `${getBaseUrl()}?type=${currentResultType}`;
-    const text = `【RPG風ファンタジー診断】\n私の職業は…\n🛡️ ${name}（${type}）でした！\n\n運命のパートナーや、取扱説明書も判明！？\n⚔️ あなたも診断してみる？\n\n▼診断はこちら\n${shareUrl}`;
+    const text = `【RPG風パートナー診断】\n私の職業は…\n🛡️ ${name}（${type}）でした！\n\n運命のパートナーや、取扱説明書も判明！？\n⚔️ あなたも診断してみる？\n\n▼診断はこちら\n${shareUrl}`;
     window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
