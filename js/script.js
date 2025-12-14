@@ -112,7 +112,7 @@ window.onload = function() {
         };
     }
 
-    // ▼▼▼ 診断開始ボタンの処理（ランダム化 ＆ バグ修正版） ▼▼▼
+    // ▼▼▼ 診断開始ボタンの処理（完全修正版） ▼▼▼
     const startBtns = document.querySelectorAll('.start-trigger');
     startBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -129,20 +129,19 @@ window.onload = function() {
             const qScreen = document.getElementById('screen-question');
             qScreen.classList.remove('hidden');
 
-            /* ====== ★追加1：妖精を表示する ====== */
+            /* ====== 妖精を表示 ====== */
             const naviLayer = document.getElementById('question-navi-layer');
             if (naviLayer) {
                 naviLayer.classList.remove('hidden');
             }
 
-            /* ====== ★追加2：質問カードの状態を強制リセット（これが表示されないバグの修正） ====== */
+            /* ====== 質問カードの状態を強制リセット ====== */
             const qCard = document.getElementById('question-card');
             if (qCard) {
-                qCard.classList.remove('fade-out-left', 'fade-in-right'); // アニメーションの残骸を消す
-                qCard.style.opacity = 1; // 透明になっていたら戻す
-                qCard.style.transform = 'none'; // 位置ズレを戻す
+                qCard.classList.remove('fade-out-left', 'fade-in-right');
+                qCard.style.opacity = 1;
+                qCard.style.transform = 'none';
             }
-            /* ============================================================= */
             
             // 少し遅らせてふわっと表示（アニメーション用）
             setTimeout(() => {
@@ -152,6 +151,11 @@ window.onload = function() {
             // 3. データの初期化
             currentQuestionIndex = 0;
             
+            // ★★★ ここが修正ポイント！ ★★★
+            isNavigating = false; // 連打防止ロックを強制解除（これでボタンが効きます！）
+            answerHistory = [];   // 履歴も念のためリセット
+            // ★★★★★★★★★★★★★★★★★
+
             // スコアのリセット
             scores = { O:0, C:0, P:0, F:0, D:0, S:0, A:0, N:0 };
 
