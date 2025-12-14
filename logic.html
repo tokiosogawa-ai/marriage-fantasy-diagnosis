@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>診断の仕組み | RPG風ファンタジー診断</title>
+    <meta property="og:title" content="診断の仕組み | RPG風パートナー診断">
+    <meta property="og:type" content="article">
+    
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -133,33 +136,33 @@
                     </div>
                 </div>
 
-                <div class="logic-card" style="border-top: 4px solid #2ed573;">
-                    <div class="logic-header" style="background:linear-gradient(135deg, #8de0a6, #2ed573);">
-                        <span class="logic-icon">🌱</span> Focus（志向・エネルギー）
-                    </div>
-                    <div class="logic-body">
-                        <p class="axis-intro" style="margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #555; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
-                            <strong>【 第4の天秤：エネルギー 】</strong><br>
-                            人生のエネルギーが向かう「方向」を示す天秤です。現状に満足せずさらなる高みを目指す上昇志向か、あるいは日々の平穏と安らぎを愛する現状肯定派か。冒険の目的そのものです。
-                        </p>
-                        <div class="logic-vs">
-                            <div class="logic-side">
-                                <strong class="logic-char color-gold">A</strong>
-                                <span class="logic-name">Ambitious</span>
-                                <p>「もっと上へ」。<br>現状に満足せず、常に成長や成功、新しい刺激を追い求めるタイプ。高い目標を持ち、それに向かって努力を惜しみません。</p>
-                            </div>
-                            <div class="logic-center">vs</div>
-                            <div class="logic-side">
-                                <strong class="logic-char color-teal">N</strong>
-                                <span class="logic-name">Natural</span>
-                                <p>「今のままで」。<br>変化や競争よりも、安定した日常や心の平穏を愛するタイプ。日々の小さな幸せを大切にし、無理のない生き方を好みます。</p>
-                            </div>
+            <div class="logic-card" style="border-top: 4px solid #27ae60;">
+                <div class="logic-header" style="background:linear-gradient(135deg, #58d68d, #27ae60);">
+                    <span class="logic-icon">🌱</span> Focus（志向・エネルギー）
+                </div>
+                <div class="logic-body">
+                    <p class="axis-intro" style="margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #555; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
+                        <strong>【 第4の天秤：エネルギーの向き 】</strong><br>
+                        人生において何を優先し、どこに情熱を注ぐかを決める天秤です。高みを目指して挑戦し続けるか、日々の穏やかな幸せを大切にするか。生き方のスタンスを表します。
+                    </p>
+                    <div class="logic-vs">
+                        <div class="logic-side">
+                            <strong class="logic-char" style="color: #e74c3c; font-size: 4rem; text-shadow: 3px 3px 0 #c0392b; display: block; margin-bottom: 10px;">A</strong>
+                            <span class="logic-name">Ambitious</span>
+                            <p>「もっと上へ」。<br>現状に満足せず、常に高い目標を掲げて自分をアップデートし続ける、熱いチャレンジャー。</p>
+                        </div>
+                        
+                        <div class="logic-center">vs</div>
+                        
+                        <div class="logic-side">
+                            <strong class="logic-char" style="color: #27ae60; font-size: 4rem; text-shadow: 3px 3px 0 #1e8449; display: block; margin-bottom: 10px;">N</strong>
+                            <span class="logic-name">Natural</span>
+                            <p>「ずっと大切に」。<br>無理な背伸びはせず、日々の穏やかな幸せや心のゆとりを最優先にする、しなやかな平和主義者。</p>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="rpg-section-box">
+                </div> <div class="rpg-section-box">
                 <h3 class="rpg-sec-title" style="justify-content:center; border:none; text-align:center;">第2章：ココロの属性<br><span style="font-size:0.8rem;">(Grand Type)</span></h3>
                 <p style="margin-bottom:20px; font-size:0.9rem; color:#666;">「役割」と「志向」が交差する時、<br>あなたの恋愛スタイルは4つの属性に分かれます。</p>
                 
@@ -340,8 +343,7 @@
                 &copy; 2024 RPG Fantasy Diagnosis
             </p>
 
-        </div>
-    </main>
+        </div> </main>
 
     <script src="js/data.js"></script>
     <script src="js/script.js"></script>
@@ -349,17 +351,14 @@
     <script>
         // コピー機能（ロジックページ用）
         function copySiteUrl() {
-            // ★修正：加工せずに現在のURL（.../logic.html）をそのまま取得
             const url = window.location.href;
             
             navigator.clipboard.writeText(url).then(() => {
-                // メニューが開いていたら閉じる
                 const nav = document.getElementById('nav-overlay');
                 if (nav && !nav.classList.contains('hidden')) {
                     nav.classList.add('hidden');
                 }
 
-                // トーストを表示
                 const toast = document.getElementById('toast');
                 if(toast) {
                     toast.classList.remove('hidden');

@@ -66,12 +66,87 @@ window.onload = function() {
             if(typeof switchScreen === 'function') switchScreen("result");
         }, 100);
     }
+
+    // ▼▼▼ 戻るボタンの設定（2重クリック防止の完全リセット版） ▼▼▼
+    const oldBackBtn = document.getElementById('back-btn');
+    if (oldBackBtn) {
+        // ボタンを複製して、過去のイベントリスナーを全て剥がす
+        const newBackBtn = oldBackBtn.cloneNode(true);
+        oldBackBtn.parentNode.replaceChild(newBackBtn, oldBackBtn);
+
+        // 新しいボタンに1回だけクリックイベントを設定する
+        newBackBtn.onclick = function() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--; // 1つ戻す
+                showQuestion();         // 画面更新
+            }
+        };
+    }
+    // ▲▲▲ ここまで ▲▲▲
+
+    // ★ここに追加：途中終了ボタンの動作
+    const earlyFinishBtn = document.getElementById('early-finish-btn');
+    if (earlyFinishBtn) {
+        earlyFinishBtn.onclick = function() {
+            // 確認ダイアログ（誤クリック防止）
+            if(!confirm("まだ質問の途中ですが、現在の回答内容で診断しますか？\n（精度は完全版より低くなります）")) {
+                return;
+            }
+
+            // 強制的に結果算出モードへ
+            // 今のスコア(scores)を使ってタイプを判定
+            
+            // 1. 各軸の勝者を決める（同点ならランダムか、デフォルトを設定）
+            // scoresオブジェクトは回答するたびに加算されている前提です
+            const type = 
+                (scores.O >= scores.C ? 'O' : 'C') + 
+                (scores.P >= scores.F ? 'P' : 'F') + 
+                (scores.D >= scores.S ? 'D' : 'S') + 
+                (scores.A >= scores.N ? 'A' : 'N');
+
+            // 2. 結果画面へ飛ばす
+            showResult(type);
+            
+            // 3. 画面トップへ
+            window.scrollTo(0, 0);
+        };
+    }
 };
 
-// イベントリスナー登録
-document.querySelectorAll(".start-trigger").forEach(btn => {
-    btn.addEventListener("click", startDiagnosis);
-});
+    // ▼▼▼ 診断開始ボタンの処理（ランダム化を追加） ▼▼▼
+    const startBtns = document.querySelectorAll('.start-trigger');
+    startBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            
+            // ★ここに追加：質問リストをシャッフル！
+            if (typeof questions !== 'undefined') {
+                shuffleArray(questions);
+            }
+
+            // 画面の切り替え
+            document.getElementById('screen-top').classList.remove('active');
+            document.getElementById('screen-top').classList.add('hidden');
+            
+            const qScreen = document.getElementById('screen-question');
+            qScreen.classList.remove('hidden');
+            
+            // 少し遅らせてふわっと表示（アニメーション用）
+            setTimeout(() => {
+                qScreen.classList.add('active');
+            }, 10);
+
+            // データの初期化
+            currentQuestionIndex = 0;
+            
+            // スコアのリセット（もしあれば）
+            scores = { O:0, C:0, P:0, F:0, D:0, S:0, A:0, N:0 };
+
+            // 最初の質問を表示
+            showQuestion();
+            window.scrollTo(0, 0);
+        });
+    });
+    // ▲▲▲ ここまで ▲▲▲
 
 document.querySelectorAll(".option-btn").forEach(btn => {
     btn.addEventListener("click", function() {
@@ -137,14 +212,58 @@ function startDiagnosis() {
     if(dom.fixedCta) dom.fixedCta.style.display = "none";
 }
 
+// =========================================
+// TOP画面に戻る機能（キャラ消去対応版）
+// =========================================
 function backToTop() {
-    const cleanUrl = window.location.origin + window.location.pathname;
-    window.history.pushState(null, null, cleanUrl);
-    switchScreen("top");
+    // 1. 画面の表示切り替え
+    document.querySelectorAll('.screen').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('active');
+    });
+    
+    const topScreen = document.getElementById('screen-top');
+    if (topScreen) {
+        topScreen.classList.remove('hidden');
+        topScreen.classList.add('active');
+    }
+
+    // 2. メニューが開いていたら閉じる
+    const nav = document.getElementById('nav-overlay');
+    if (nav) {
+        nav.classList.add('hidden');
+    }
+
+    // 3. スクロールを一番上に戻す
     window.scrollTo(0, 0);
-    if(dom.navOverlay) dom.navOverlay.classList.add("hidden");
+
+    // 4. 固定ボタン（CTA）を復活させる
+    const fixedCta = document.querySelector('.fixed-cta');
+    if (fixedCta) {
+        fixedCta.style.display = ''; 
+        fixedCta.style.opacity = '';
+        fixedCta.classList.remove('hidden');
+    }
+
+    // ▼▼▼ 追加：キャラやナビ画像を隠す処理 ▼▼▼
+    
+    // 診断結果の立ち絵レイヤー（もしあれば）
+    const floatChar = document.getElementById('floating-char-layer');
+    if (floatChar) {
+        floatChar.classList.add('hidden');
+        floatChar.style.display = 'none'; // 念のためスタイルも直接消す
+    }
+
+    // 質問中のナビキャラ（妖精など）
+    const naviLayer = document.getElementById('question-navi-layer');
+    if (naviLayer) {
+        naviLayer.classList.add('hidden');
+    }
+    
+    // ▲▲▲ ここまで ▲▲▲
+
+    // 5. データのりセット
     currentQuestionIndex = 0;
-    scores = { O:0, C:0, P:0, F:0, D:0, S:0, A:0, N:0 };
 }
 
 function switchScreen(screenName) {
@@ -171,40 +290,69 @@ function switchScreen(screenName) {
     }
 }
 
-function updateQuestionView() {
-    // data.jsのquestionsを使う
-    const q = questions[currentQuestionIndex];
-    dom.questionText.innerText = `Q${currentQuestionIndex + 1}. ${q.text}`;
-    dom.currentNum.innerText = currentQuestionIndex + 1;
-    dom.totalNum.innerText = questions.length;
+// 質問画面の表示更新
+// 質問画面の表示更新（アイコン移動＆戻るボタン表示 完全版）
+function showQuestion() {
+    // データ読み込み待ちの安全策
+    if (typeof questions === 'undefined' || questions.length === 0) return;
+
+    // 1. 進捗率の計算
+    // 現在位置 / 全問数 (例: 1問目なら 1/56)
+    const currentNum = currentQuestionIndex + 1;
+    const totalNum = questions.length;
+    const progressPercent = (currentNum / totalNum) * 100;
+
+    // 2. プログレスバーの更新
+    // バーの幅を変える（これだけで勇者も勝手についてくる！）
+    document.getElementById('progress-bar').style.width = `${progressPercent}%`;
     
-    const pct = ((currentQuestionIndex) / questions.length) * 100;
-    dom.progressBar.style.width = `${pct}%`;
+    document.getElementById('current-num').textContent = currentNum;
+    document.getElementById('total-num').textContent = totalNum;
 
-    dom.backBtn.style.display = (currentQuestionIndex === 0) ? "none" : "inline-block";
+    /* ▼▼▼ 削除またはコメントアウト ▼▼▼
+       CSSで自動追従するようにしたので、以下の計算コードはもう不要です！
+       消しちゃってください。
+    */
+    // const walker = document.querySelector('.progress-walker');
+    // if (walker) {
+    //     walker.style.left = ... （この行を消す）
+    // }
+    /* ▲▲▲ 削除ここまで ▲▲▲ */
+    
+    // 3. 質問文の更新
+    const q = questions[currentQuestionIndex];
+    document.getElementById('question-text').textContent = q.text;
 
-    // 妖精のセリフ更新
-    const fukidashi = document.querySelector('.navi-fukidashi');
-    if (fukidashi) {
-        let msg = "";
-        const current = currentQuestionIndex + 1;
-        const total = questions.length;
-
-        if (current === 1) msg = "直感で答えてね！";
-        else if (current === 10) msg = "どんなタイプになるのかな？";
-        else if (current === 20) msg = "運命の人が見つかるかも…！";
-        else if (current === 30) msg = "折り返し地点だよ！";
-        else if (current === 40) msg = "あなたの性格が見えてきたよ";
-        else if (current === 50) msg = "ラストスパート！！";
-        else if (current === total) msg = "最後の質問だよ！";
-
-        if (msg) {
-            fukidashi.textContent = msg;
-            fukidashi.style.animation = 'none';
-            fukidashi.offsetHeight;
-            fukidashi.style.animation = 'pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    // 5. 前の質問に戻るボタンの表示制御
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+        if (currentQuestionIndex > 0) {
+            // 2問目以降なら表示
+            backBtn.style.display = 'inline-block';
+            backBtn.style.visibility = 'visible'; 
+        } else {
+            // 1問目なら隠す
+            backBtn.style.display = 'none';
         }
     }
+
+    // ★ここに追加：途中終了ボタンの制御 (10問目以降のみ表示)
+    const earlyFinishArea = document.getElementById('early-finish-area');
+    if (earlyFinishArea) {
+        // currentQuestionIndex は 0始まりなので、9 が 10問目
+        if (currentQuestionIndex >= 9) {
+            earlyFinishArea.classList.remove('hidden');
+            earlyFinishArea.style.display = 'block';
+        } else {
+            earlyFinishArea.classList.add('hidden');
+            earlyFinishArea.style.display = 'none';
+        }
+    }
+}
+
+// updateQuestionView は showQuestion のエイリアスとして残す（後方互換性のため）
+function updateQuestionView() {
+    showQuestion();
 }
 
 function registerAnswer(value) {
@@ -817,4 +965,17 @@ function showSavedResult() {
         console.error("履歴読み込みエラー:", e);
         alert("データの読み込みに失敗しました。");
     }
+}
+
+// =========================================
+// ユーティリティ：配列をシャッフルする関数
+// =========================================
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        // 0〜iの範囲でランダムなインデックスを選ぶ
+        const j = Math.floor(Math.random() * (i + 1));
+        // 要素を入れ替える
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }

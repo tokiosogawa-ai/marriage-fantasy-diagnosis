@@ -235,16 +235,39 @@ button { font-family: inherit; }
     position: relative; z-index: 3;
 }
 .progress-bar-bg { height: 12px; background: rgba(255, 255, 255, 0.8); border: 2px solid #dcdcdc; border-radius: 10px; overflow: visible; }
+/* =========================================
+   進捗バーと勇者の設定
+   ========================================= */
+
+/* バーの色の部分（親要素） */
 .progress-bar-fill {
-    background: linear-gradient(90deg, #f1c40f, #f39c12); height: 100%; width: 0%;
-    border-radius: 6px; position: relative; transition: width 0.3s ease;
+    height: 100%;
+    background: linear-gradient(90deg, #ff9a9e 0%, #ff6b6b 100%); /* 好みの色で */
+    width: 0%;
+    border-radius: 20px;
+    transition: width 0.5s ease; /* なめらかに伸びる */
+    position: relative; /* ★重要：これを基準に勇者を配置する */
 }
+
+/* 勇者のアイコン（子要素） */
 .progress-walker {
-    position: absolute; right: -15px; top: -35px; width: 40px; height: auto;
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); transition: right 0.3s ease;
-    animation: walk-bounce 0.5s infinite alternate; z-index: 5;
+    position: absolute; /* 自由に配置できるようにする */
+    
+    /* ★ここがポイント！ */
+    /* バーの「右端」から少し右にはみ出させる（アイコンの幅の半分くらい） */
+    right: -20px; 
+    
+    /* バーの上にちょこんと乗るように高さ調整 */
+    top: -35px; 
+    
+    /* アイコンのサイズ（適宜調整してください） */
+    width: 40px; 
+    height: auto;
+    
+    /* アニメーション（歩いているように見せるなどお好みで） */
+    transition: right 0.5s ease;
+    z-index: 10;
 }
-@keyframes walk-bounce { from { transform: translateY(0); } to { transform: translateY(-3px); } }
 
 /* 質問カード */
 .question-card {
@@ -1028,5 +1051,221 @@ button { font-family: inherit; }
         width: 90px !important;
         height: 90px !important;
         margin-right: 15px !important;
+    }
+}
+
+/* =========================================
+   前の質問に戻るボタン（デザイン強化版）
+   ========================================= */
+.nav-back {
+    margin-top: 25px;       /* 上との隙間 */
+    padding-top: 20px;
+    border-top: 1px dashed #eee; /* 薄い区切り線 */
+    text-align: center;
+    width: 100%;
+}
+
+/* ボタン本体のデザイン */
+#back-btn {
+    background: #ffffff;      /* 白背景 */
+    border: 2px solid #ddd;   /* グレーの枠線 */
+    color: #777;              /* グレーの文字 */
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 10px 25px;       /* 横長のカプセル型にする */
+    border-radius: 50px;      /* 丸くする */
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+/* マウスを乗せた時の動き */
+#back-btn:hover {
+    border-color: #aaa;       /* 枠を少し濃く */
+    color: #333;              /* 文字を黒く */
+    background: #f9f9f9;      /* 背景を少しグレーに */
+    transform: translateY(-2px); /* ちょこっと浮く */
+}
+
+/* クリックした瞬間 */
+#back-btn:active {
+    transform: translateY(0); /* 押し込む感じ */
+    background: #eee;
+}
+
+/* =========================================
+   結果画面の固定シェアバー
+   ========================================= */
+/* =========================================
+   結果画面の固定シェアバー（見切れ防止完全版）
+   ========================================= */
+.fixed-result-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    /* width: 100%; をやめて、左右を0にすることで強制的に画面幅に合わせます */
+    right: 0; 
+    
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,0,0,0.1);
+    
+    /* ▼▼▼ 余白設定（重要） ▼▼▼ */
+    /* パディングが横幅を広げてしまわないようにする設定 */
+    box-sizing: border-box;
+
+    /* 上下の余白 */
+    padding-top: 15px;
+    padding-bottom: max(25px, env(safe-area-inset-bottom));
+    
+    /* 左右の余白（スマホの画面端の形状に合わせて自動調整） */
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    /* ▲▲▲ ここまで ▲▲▲ */
+
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    animation: slideUp 0.5s ease-out;
+}
+
+/* シェアを促す文字 */
+.fixed-share-label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+/* ボタンを横並びにするグループ */
+.fixed-share-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* 丸いシェアボタンのデザイン */
+.share-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.share-icon-btn:active {
+    transform: scale(0.9);
+}
+
+/* 各ボタンの色 */
+.share-icon-btn.twitter { background: #000; } /* Xは黒 */
+.share-icon-btn.line    { background: #06c755; } /* LINEの緑 */
+.share-icon-btn.copy    { background: #888; } /* コピーはグレー */
+
+/* 下からふわっと出るアニメーション */
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+/* =========================================
+   PC画面（幅768px以上）での表示調整
+   ========================================= */
+@media (min-width: 768px) {
+    /* 固定フッターのレイアウト変更 */
+    .fixed-result-footer {
+        /* 両端揃え(space-between)をやめて、中央寄せにする */
+        justify-content: center;
+        /* 「結果をシェアする」の文字と、ボタン群の間に隙間を作る */
+        gap: 30px;
+        /* PCでは少しゆったりした余白に */
+        padding: 20px;
+        /* PCでは下の安全領域（safe-area）は不要なのでリセット */
+        padding-bottom: 20px; 
+    }
+
+    /* ボタングループの間隔も少し広げて見やすく */
+    .fixed-share-group {
+        gap: 15px;
+    }
+}
+
+/* =========================================
+   途中終了ボタンのデザイン（目立つバージョン）
+   ========================================= */
+.early-finish-area {
+    margin-top: 30px; /* 上の余白を少し広げる */
+    padding-top: 20px;
+    border-top: 2px dashed #eee; /* 点線にして区切りを明確に */
+    text-align: center;
+}
+
+/* ボタン本体のスタイル */
+.btn-text-danger {
+    background: #fff0f0;      /* 薄い赤色の背景 */
+    border: 2px solid #e74c3c; /* 赤色の枠線 */
+    color: #e74c3c;           /* 赤色の文字 */
+    font-size: 0.95rem;
+    font-weight: bold;        /* 太字にする */
+    cursor: pointer;
+    text-decoration: none;    /* 下線を消す */
+    padding: 12px 24px;       /* 内側の余白を広げて大きく */
+    border-radius: 50px;      /* 丸っこくして押しやすく */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.15); /* 影をつけて浮かせる */
+    display: inline-block;    /* ちゃんとボタンの形にする */
+    line-height: 1.4;
+}
+
+/* マウスを乗せた時の動き */
+.btn-text-danger:hover {
+    background: #e74c3c;      /* 背景を赤色に */
+    color: #ffffff;           /* 文字を白色に（反転） */
+    transform: translateY(-3px); /* 少し上に浮き上がる */
+    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3); /* 影を強くする */
+}
+
+/* ボタンの中の注意書きを少し小さく */
+.btn-text-danger span {
+    font-size: 0.8rem;
+    font-weight: normal;
+    opacity: 0.9;
+    display: block; /* 改行させる */
+    margin-top: 4px;
+}
+
+/* =========================================
+   キャラクター表示レイヤーの調整
+   ========================================= */
+#floating-char-layer {
+    /* フッターの z-index が 1000 なので、それより大きい値にする */
+    z-index: 1010 !important; 
+    
+    /* 【重要】キャラがボタンの邪魔にならないようにする設定 */
+    /* これがないと、キャラが重なっている部分のシェアボタンが押せなくなります */
+    pointer-events: none;
+}
+
+/* =========================================
+   スマホ表示時のキャラ位置調整（修正版）
+   ========================================= */
+@media (max-width: 767px) {
+    #floating-char-layer {
+        /* シェアバーの高さ（約80px）のすぐ上に配置 */
+        /* 110pxだと浮きすぎなので、85pxくらいに調整 */
+        bottom: 85px !important; 
+        
+        right: 10px !important;
+        transform: scale(0.9);
+        transform-origin: bottom right;
     }
 }

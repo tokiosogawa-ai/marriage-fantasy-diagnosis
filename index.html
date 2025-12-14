@@ -226,10 +226,18 @@
                         <span class="label">全然<br>違う</span>
                     </button>
                 </div>
-            </div>
-            
-            <div class="nav-back">
-                <button id="back-btn" class="btn-text">↩︎ 前の質問に戻る</button>
+
+                <div class="nav-back">
+                    <button id="back-btn" class="btn-text">↩︎ 前の質問に戻る</button>
+                </div>
+
+                <div id="early-finish-area" class="early-finish-area hidden">
+                    <button id="early-finish-btn" class="btn-text-danger">
+                        ⚡️ 現時点で診断を終える<br>
+                        <span style="font-size:0.75rem;">(※診断の精度は下がります)</span>
+                    </button>
+                </div>
+
             </div>
         </section>
 
@@ -492,11 +500,20 @@
                     <div id="type-list-container" class="type-grid"></div>
                 </div>
 
-                <div class="site-footer" style="margin-top: 60px; text-align: center; padding-bottom: 20px;">
+                <div class="site-footer" style="margin-top: 60px; text-align: center; padding-bottom: 100px;">
                     <p style="font-size: 0.75rem; color: #ccc; font-family: sans-serif;">
                         &copy; 2024 RPG Fantasy Diagnosis
                     </p>
                 </div>
+
+            <div class="fixed-result-footer">
+                <span class="fixed-share-label">結果をシェアする👇</span>
+                <div class="fixed-share-group">
+                    <button class="share-icon-btn twitter" onclick="shareTwitter()">𝕏</button>
+                    <button class="share-icon-btn line" onclick="shareLine()">LINE</button>
+                    <button class="share-icon-btn copy" onclick="copyToClipboard()">🔗</button>
+                </div>
+            </div>
 
             </div>
         </section>
