@@ -1055,14 +1055,18 @@ button { font-family: inherit; }
 }
 
 /* =========================================
-   前の質問に戻るボタン（デザイン強化版）
+   質問画面のフッター（戻る・途中終了）のレイアウト調整
    ========================================= */
+
+/* 1. 戻るボタンエリア */
 .nav-back {
-    margin-top: 25px;       /* 上との隙間 */
+    margin-top: 20px;       /* 選択肢との隙間 */
     padding-top: 20px;
-    border-top: 1px dashed #eee; /* 薄い区切り線 */
+    border-top: 1px dashed #eee; /* ここで区切る */
     text-align: center;
     width: 100%;
+    /* 下の余白を少し減らす */
+    margin-bottom: 5px; 
 }
 
 /* ボタン本体のデザイン */
@@ -1199,30 +1203,33 @@ button { font-family: inherit; }
     }
 }
 
-/* =========================================
-   途中終了ボタンのデザイン（目立つバージョン）
-   ========================================= */
+/* 2. 途中終了ボタンエリア */
 .early-finish-area {
-    margin-top: 30px; /* 上の余白を少し広げる */
-    padding-top: 20px;
-    border-top: 2px dashed #eee; /* 点線にして区切りを明確に */
+    /* ★修正ポイント：余白を大幅にカットして上に近づける */
+    margin-top: 5px; 
+    padding-top: 0;
+    
+    /* 区切り線を削除（戻るボタンエリアと一体化させる） */
+    border-top: none; 
+    
     text-align: center;
 }
 
-/* ボタン本体のスタイル */
+/* ついでに、途中終了ボタン自体のサイズを少しスリムにして圧迫感を減らす */
 .btn-text-danger {
-    background: #fff0f0;      /* 薄い赤色の背景 */
-    border: 2px solid #e74c3c; /* 赤色の枠線 */
-    color: #e74c3c;           /* 赤色の文字 */
-    font-size: 0.95rem;
-    font-weight: bold;        /* 太字にする */
+    padding: 10px 20px; /* パディングを少し減らす */
+    font-size: 0.85rem; /* 文字サイズも少し控えめに */
+    /* それ以外の装飾はそのまま */
+    background: #fff0f0;
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+    font-weight: bold;
     cursor: pointer;
-    text-decoration: none;    /* 下線を消す */
-    padding: 12px 24px;       /* 内側の余白を広げて大きく */
-    border-radius: 50px;      /* 丸っこくして押しやすく */
+    text-decoration: none;
+    border-radius: 50px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.15); /* 影をつけて浮かせる */
-    display: inline-block;    /* ちゃんとボタンの形にする */
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.15);
+    display: inline-block;
     line-height: 1.4;
 }
 
@@ -1268,4 +1275,24 @@ button { font-family: inherit; }
         transform: scale(0.9);
         transform-origin: bottom right;
     }
+}
+
+/* =========================================
+   Focus（AとN）の文字色と影の設定（完全修正版）
+   ========================================= */
+
+/* A (Ambitious) - 他の文字と同じグラデーション＆フィルター影を使用 */
+.color-red {
+    /* グラデーションで色をつける */
+    background-image: linear-gradient(135deg, #ff7675 0%, #ff4757 100%);
+    /* text-shadowではなく、filterを使うのがコツ（透明文字の影用） */
+    filter: drop-shadow(4px 4px 0px #c0392b);
+}
+
+/* N (Natural) - 他の文字と同じグラデーション＆フィルター影を使用 */
+.color-nature {
+    /* グラデーションで色をつける */
+    background-image: linear-gradient(135deg, #7bed9f 0%, #2ed573 100%);
+    /* text-shadowではなく、filterを使うのがコツ */
+    filter: drop-shadow(4px 4px 0px #1e8449);
 }
