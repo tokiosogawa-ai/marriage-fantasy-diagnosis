@@ -524,22 +524,24 @@ function renderChart() {
 function getBaseUrl() { return window.location.origin + window.location.pathname; }
 
 // =========================================
-// シェア機能（修正版）
+// シェア機能（キャッシュ対策版 v2）
 // =========================================
+
+// 共通：キャッシュ回避用のパラメータ
+// ※タイトルや画像を変えたのに反映されない時は、ここの数字を 3, 4... と増やしてください
+const CACHE_BUSTER = "&v=2"; 
 
 // Twitterシェア
 function shareTwitter() {
-    // 診断結果画面から名前とタイプを取得
     const nameEl = document.getElementById('res-name');
     const typeEl = document.getElementById('res-grand-class');
     
-    // 要素がない場合（トップページなど）の対策
     const name = nameEl ? nameEl.textContent : "冒険者";
     const type = typeEl ? typeEl.textContent : "RPGジョブ";
     
-    const shareUrl = `${getBaseUrl()}?type=${currentResultType || ""}`;
+    // ★修正：末尾にバージョン番号を追加してキャッシュを強制更新
+    const shareUrl = `${getBaseUrl()}?type=${currentResultType || ""}${CACHE_BUSTER}`;
     
-    // 文言を「パートナー診断」に統一
     const text = `私の【RPG風パートナー診断】結果は…\n🛡️ 職業：${name}（${type}）でした！\n\n運命のパートナーや攻略法も判明！？\n⚔️ あなたも冒険に出る👇\n#RPG風パートナー診断\n`;
     
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
@@ -553,22 +555,25 @@ function shareLine() {
     const name = nameEl ? nameEl.textContent : "冒険者";
     const type = typeEl ? typeEl.textContent : "RPGジョブ";
     
-    const shareUrl = `${getBaseUrl()}?type=${currentResultType || ""}`;
+    // ★修正：LINEにも同じくバージョン番号を追加
+    const shareUrl = `${getBaseUrl()}?type=${currentResultType || ""}${CACHE_BUSTER}`;
     
-    // 文言を「パートナー診断」に統一
     const text = `【RPG風パートナー診断】\n私の職業は…\n🛡️ ${name}（${type}）でした！\n\n運命のパートナーや、取扱説明書も判明！？\n⚔️ あなたも診断してみる？\n\n▼診断はこちら\n${shareUrl}`;
     
     window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-// URLコピー機能（画面に応じたURL生成）
+// URLコピー機能
 function copyToClipboard() {
-    let shareUrl = getBaseUrl(); // 基本のURL（トップページ）
+    let shareUrl = getBaseUrl(); 
 
-    // ★修正：現在「結果画面」が表示されている場合のみ、パラメータを付ける
     const resultScreen = document.getElementById('screen-result');
     if (resultScreen && resultScreen.classList.contains('active') && currentResultType) {
-        shareUrl += `?type=${currentResultType}`;
+        // 結果画面ならタイプとバージョンをつける
+        shareUrl += `?type=${currentResultType}${CACHE_BUSTER}`;
+    } else {
+        // トップ画面ならバージョンだけつける（?type=がないので ?v=2 にする）
+        shareUrl += `?v=2`;
     }
 
     navigator.clipboard.writeText(shareUrl).then(() => {
