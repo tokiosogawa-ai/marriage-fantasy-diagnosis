@@ -111,42 +111,57 @@ window.onload = function() {
             window.scrollTo(0, 0);
         };
     }
-};
 
-    // ▼▼▼ 診断開始ボタンの処理（ランダム化を追加） ▼▼▼
+    // ▼▼▼ 診断開始ボタンの処理（ランダム化 ＆ バグ修正版） ▼▼▼
     const startBtns = document.querySelectorAll('.start-trigger');
     startBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             
-            // ★ここに追加：質問リストをシャッフル！
+            // 1. 質問リストをシャッフル
             if (typeof questions !== 'undefined') {
                 shuffleArray(questions);
             }
 
-            // 画面の切り替え
+            // 2. 画面の切り替え
             document.getElementById('screen-top').classList.remove('active');
             document.getElementById('screen-top').classList.add('hidden');
             
             const qScreen = document.getElementById('screen-question');
             qScreen.classList.remove('hidden');
+
+            /* ====== ★追加1：妖精を表示する ====== */
+            const naviLayer = document.getElementById('question-navi-layer');
+            if (naviLayer) {
+                naviLayer.classList.remove('hidden');
+            }
+
+            /* ====== ★追加2：質問カードの状態を強制リセット（これが表示されないバグの修正） ====== */
+            const qCard = document.getElementById('question-card');
+            if (qCard) {
+                qCard.classList.remove('fade-out-left', 'fade-in-right'); // アニメーションの残骸を消す
+                qCard.style.opacity = 1; // 透明になっていたら戻す
+                qCard.style.transform = 'none'; // 位置ズレを戻す
+            }
+            /* ============================================================= */
             
             // 少し遅らせてふわっと表示（アニメーション用）
             setTimeout(() => {
                 qScreen.classList.add('active');
             }, 10);
 
-            // データの初期化
+            // 3. データの初期化
             currentQuestionIndex = 0;
             
-            // スコアのリセット（もしあれば）
+            // スコアのリセット
             scores = { O:0, C:0, P:0, F:0, D:0, S:0, A:0, N:0 };
 
-            // 最初の質問を表示
+            // 4. 最初の質問を表示
             showQuestion();
             window.scrollTo(0, 0);
         });
     });
     // ▲▲▲ ここまで ▲▲▲
+};
 
 document.querySelectorAll(".option-btn").forEach(btn => {
     btn.addEventListener("click", function() {
